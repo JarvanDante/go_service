@@ -4,8 +4,35 @@
 gfcli:
   gen:
     dao:
-      - link: "mysql:root:12345678@tcp(127.0.0.1:3306)/test"
+      # boya（默认）
+      - link: "mysql:root:654321@tcp(127.0.0.1:3306)/boya"
+        path: "internal/dao/boya"
+        group: "default"                  # GoFrame中对应的group名
         descriptionTag: true
+        jsonCase: "CamelLower"            # JSON字段命名规则
+        overwrite: true                   # 是否覆盖生成文件
+      # by_site
+      - link: "mysql:root:654321@tcp(127.0.0.1:3306)/by_site"
+        path: "internal/dao/by_site"
+        group: "by_site"                  # GoFrame中对应的group名
+        descriptionTag: true
+        jsonCase: "CamelLower"            # JSON字段命名规则
+        overwrite: true                   # 是否覆盖生成文件
+      # by_balance
+      - link: "mysql:root:654321@tcp(127.0.0.1:3306)/by_balance"
+        path: "internal/dao/by_balance"
+        group: "by_balance"                  # GoFrame中对应的group名
+        descriptionTag: true
+        jsonCase: "CamelLower"            # JSON字段命名规则
+        overwrite: true                   # 是否覆盖生成文件
+      # casion_by
+      - link: "mysql:root:654321@tcp(127.0.0.1:3306)/casion_by"
+        path: "internal/dao/casion_by"
+        group: "casion_by"                  # GoFrame中对应的group名
+        descriptionTag: true
+        jsonCase: "CamelLower"            # JSON字段命名规则
+        overwrite: true                   # 是否覆盖生成文件
+
 
   docker:
     build: "-a amd64 -s linux -p temp -ew"
