@@ -11,5 +11,27 @@ logger:
 
 # https://goframe.org/docs/core/gdb-config-file
 database:
+  # boya（默认）
   default:
-    link: "mysql:root:12345678@tcp(127.0.0.1:3306)/test"
+    type: "mysql"
+    link: "mysql:root:654321@tcp(127.0.0.1:3306)/boya"
+    debug: true
+    charset: "utf8mb4"
+  # by_site
+  by_site:
+    type: "mysql"
+    link: "mysql:root:654321@tcp(127.0.0.1:3306)/by_site"
+    debug: true
+    charset: "utf8mb4"
+  # by_balance
+  by_balance:
+    type: "mysql"
+    link: "mysql:root:654321@tcp(127.0.0.1:3306)/by_balance"
+    debug: true
+    charset: "utf8mb4"
+  # casion_by
+  casion_by:
+    type: "mysql"
+    link: "mysql:root:654321@tcp(127.0.0.1:3306)/casion_by"
+    debug: true
+    charset: "utf8mb4"
