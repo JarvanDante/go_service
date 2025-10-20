@@ -2,6 +2,7 @@ package main
 
 import (
 	_ "go-service/internal/logic"
+	_ "go-service/internal/logic/frontend"
 	_ "go-service/internal/packed"
 
 	"github.com/gogf/gf/v2/os/gctx"

@@ -3,6 +3,7 @@ package cmd
 import (
 	"context"
 	"go-service/internal/controller"
+	"go-service/internal/controller/frontend"
 
 	"github.com/gogf/gf/v2/frame/g"
 	"github.com/gogf/gf/v2/net/ghttp"
@@ -13,7 +14,7 @@ import (
 
 var (
 	Main = gcmd.Command{
-		Name:  "main",
+		Name:  "by",
 		Usage: "main",
 		Brief: "start http server",
 		Func: func(ctx context.Context, parser *gcmd.Parser) (err error) {
@@ -23,6 +24,7 @@ var (
 				group.Bind(
 					hello.NewV1(),
 					controller.NewUserV1(),
+					frontend.NewDemo(),
 				)
 			})
 			s.Run()
