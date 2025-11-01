@@ -1,15 +1,12 @@
 package cmd
 
 import (
-	"context"
-	"go-service/internal/controller"
 	"go-service/internal/controller/frontend"
+	"golang.org/x/net/context"
 
 	"github.com/gogf/gf/v2/frame/g"
 	"github.com/gogf/gf/v2/net/ghttp"
 	"github.com/gogf/gf/v2/os/gcmd"
-
-	"go-service/internal/controller/hello"
 )
 
 var (
@@ -21,11 +18,18 @@ var (
 			s := g.Server()
 			s.Group("/api", func(group *ghttp.RouterGroup) {
 				group.Middleware(ghttp.MiddlewareHandlerResponse)
-				group.Bind(
-					hello.NewV1(),
-					controller.NewUserV1(),
-					frontend.NewDemo(),
-				)
+				group.Group("/frontend", func(groupFront *ghttp.RouterGroup) {
+					groupFront.Bind(
+						frontend.NewDemo(),
+					)
+				})
+
+				group.Group("/backend", func(groupBackend *ghttp.RouterGroup) {
+					groupBackend.Bind(
+						frontend.NewDemo(),
+					)
+				})
+
 			})
 			s.Run()
 			return nil
