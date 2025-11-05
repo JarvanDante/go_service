@@ -23,6 +23,7 @@ type AdDao struct {
 type AdColumns struct {
 	Id          string //
 	SiteId      string //
+	ChannelId   string // 渠道id
 	Type        string //
 	Name        string //
 	Image       string //
@@ -41,6 +42,7 @@ type AdColumns struct {
 var adColumns = AdColumns{
 	Id:          "id",
 	SiteId:      "site_id",
+	ChannelId:   "channel_id",
 	Type:        "type",
 	Name:        "name",
 	Image:       "image",

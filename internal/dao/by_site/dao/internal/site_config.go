@@ -43,6 +43,7 @@ type SiteConfigColumns struct {
 	UpdatedAt            string //
 	SwitchSign           string //
 	RegMoney             string // 注册送金额
+	MaxManualMoney       string // 手动上分上限
 }
 
 // siteConfigColumns holds the columns for the table site_config.
@@ -69,6 +70,7 @@ var siteConfigColumns = SiteConfigColumns{
 	UpdatedAt:            "updated_at",
 	SwitchSign:           "switch_sign",
 	RegMoney:             "reg_money",
+	MaxManualMoney:       "max_manual_money",
 }
 
 // NewSiteConfigDao creates and returns a new DAO object for table data access.

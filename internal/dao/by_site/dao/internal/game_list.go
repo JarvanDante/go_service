@@ -39,6 +39,7 @@ type GameListColumns struct {
 	IsNew     string // 新的
 	Sort      string // 排序大的靠前
 	Status    string // 状态0关闭1开启
+	Available string // 可用状态1可用2维护
 	CreatedAt string // 新增时间
 	UpdatedAt string // 更新时间
 	GameId    string //
@@ -65,6 +66,7 @@ var gameListColumns = GameListColumns{
 	IsNew:     "is_new",
 	Sort:      "sort",
 	Status:    "status",
+	Available: "available",
 	CreatedAt: "created_at",
 	UpdatedAt: "updated_at",
 	GameId:    "game_id",

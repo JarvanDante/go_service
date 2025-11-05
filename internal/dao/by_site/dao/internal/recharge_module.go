@@ -23,6 +23,7 @@ type RechargeModuleDao struct {
 type RechargeModuleColumns struct {
 	Id                     string //
 	SiteId                 string // 站点ID
+	ChannelId              string // 渠道id
 	ActivityId             string // 活动id
 	Name                   string // 活动名称
 	StartTime              string // 开始时间
@@ -41,6 +42,7 @@ type RechargeModuleColumns struct {
 	BonusAmount            string // 奖励金额
 	BonusPercent           string // 奖励金额比例
 	BonusMax               string // 最高奖励金额.0=不限制
+	BonusRules             string // 充值区间奖励规则（JSON格式）
 	ApplyFrequency         string // 申请频率。0=不限；1=每日；2=每周；3=每月
 	ApplyTimes             string // 每人申请次数
 	WithdrawNeedWaterTimes string // 提现流水要求多少倍流水
@@ -55,6 +57,7 @@ type RechargeModuleColumns struct {
 var rechargeModuleColumns = RechargeModuleColumns{
 	Id:                     "id",
 	SiteId:                 "site_id",
+	ChannelId:              "channel_id",
 	ActivityId:             "activity_id",
 	Name:                   "name",
 	StartTime:              "start_time",
@@ -73,6 +76,7 @@ var rechargeModuleColumns = RechargeModuleColumns{
 	BonusAmount:            "bonus_amount",
 	BonusPercent:           "bonus_percent",
 	BonusMax:               "bonus_max",
+	BonusRules:             "bonus_rules",
 	ApplyFrequency:         "apply_frequency",
 	ApplyTimes:             "apply_times",
 	WithdrawNeedWaterTimes: "withdraw_need_water_times",

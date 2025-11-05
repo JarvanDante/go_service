@@ -23,6 +23,7 @@ type ActivityModuleDao struct {
 type ActivityModuleColumns struct {
 	Id         string //
 	SiteId     string // 站点ID
+	ChannelId  string // 渠道id
 	ActivityId string // 活动ID
 	ModuleType string // 活动模块类型。1=充值；2=大转盘；3=开宝箱；4=砸金蛋；5=抢红包
 	ModuleId   string // 活动模块ID
@@ -38,6 +39,7 @@ type ActivityModuleColumns struct {
 var activityModuleColumns = ActivityModuleColumns{
 	Id:         "id",
 	SiteId:     "site_id",
+	ChannelId:  "channel_id",
 	ActivityId: "activity_id",
 	ModuleType: "module_type",
 	ModuleId:   "module_id",

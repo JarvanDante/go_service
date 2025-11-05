@@ -14,6 +14,7 @@ type Ad struct {
 	g.Meta      `orm:"table:ad, do:true"`
 	Id          any         //
 	SiteId      any         //
+	ChannelId   any         // 渠道id
 	Type        any         //
 	Name        any         //
 	Image       any         //

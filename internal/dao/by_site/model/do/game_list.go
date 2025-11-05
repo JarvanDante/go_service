@@ -30,6 +30,7 @@ type GameList struct {
 	IsNew     any         // 新的
 	Sort      any         // 排序大的靠前
 	Status    any         // 状态0关闭1开启
+	Available any         // 可用状态1可用2维护
 	CreatedAt *gtime.Time // 新增时间
 	UpdatedAt *gtime.Time // 更新时间
 	GameId    any         //

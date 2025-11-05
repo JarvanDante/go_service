@@ -14,6 +14,7 @@ type Activity struct {
 	g.Meta           `orm:"table:activity, do:true"`
 	Id               any         // 活动ID
 	SiteId           any         // 站点ID
+	ChannelId        any         // 渠道id
 	ActivityName     any         // 活动名称
 	Describe         any         // 活动描述
 	PcCover          any         // pc端封面

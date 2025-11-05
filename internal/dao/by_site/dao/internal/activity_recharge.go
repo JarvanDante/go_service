@@ -23,6 +23,7 @@ type ActivityRechargeDao struct {
 type ActivityRechargeColumns struct {
 	Id            string //
 	SiteId        string // 站点ID
+	ChannelId     string // 渠道id
 	ActivityId    string // 活动ID
 	PcContent     string // pc端活动内容
 	MobileContent string // 手机端活动内容
@@ -38,6 +39,7 @@ type ActivityRechargeColumns struct {
 var activityRechargeColumns = ActivityRechargeColumns{
 	Id:            "id",
 	SiteId:        "site_id",
+	ChannelId:     "channel_id",
 	ActivityId:    "activity_id",
 	PcContent:     "pc_content",
 	MobileContent: "mobile_content",

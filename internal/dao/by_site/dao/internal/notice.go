@@ -32,6 +32,7 @@ type NoticeColumns struct {
 	Status      string //
 	Platform    string //
 	Content     string //
+	ImageUrl    string // 公告图片地址
 	CreatedAt   string //
 	UpdatedAt   string //
 }
@@ -49,6 +50,7 @@ var noticeColumns = NoticeColumns{
 	Status:      "status",
 	Platform:    "platform",
 	Content:     "content",
+	ImageUrl:    "image_url",
 	CreatedAt:   "created_at",
 	UpdatedAt:   "updated_at",
 }

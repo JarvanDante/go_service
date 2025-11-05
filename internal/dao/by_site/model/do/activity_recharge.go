@@ -14,6 +14,7 @@ type ActivityRecharge struct {
 	g.Meta        `orm:"table:activity_recharge, do:true"`
 	Id            any         //
 	SiteId        any         // 站点ID
+	ChannelId     any         // 渠道id
 	ActivityId    any         // 活动ID
 	PcContent     any         // pc端活动内容
 	MobileContent any         // 手机端活动内容

@@ -14,6 +14,7 @@ type RechargeModule struct {
 	g.Meta                 `orm:"table:recharge_module, do:true"`
 	Id                     any         //
 	SiteId                 any         // 站点ID
+	ChannelId              any         // 渠道id
 	ActivityId             any         // 活动id
 	Name                   any         // 活动名称
 	StartTime              *gtime.Time // 开始时间
@@ -32,6 +33,7 @@ type RechargeModule struct {
 	BonusAmount            any         // 奖励金额
 	BonusPercent           any         // 奖励金额比例
 	BonusMax               any         // 最高奖励金额.0=不限制
+	BonusRules             any         // 充值区间奖励规则（JSON格式）
 	ApplyFrequency         any         // 申请频率。0=不限；1=每日；2=每周；3=每月
 	ApplyTimes             any         // 每人申请次数
 	WithdrawNeedWaterTimes any         // 提现流水要求多少倍流水

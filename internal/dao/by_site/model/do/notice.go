@@ -23,6 +23,7 @@ type Notice struct {
 	Status      any         //
 	Platform    any         //
 	Content     any         //
+	ImageUrl    any         // 公告图片地址
 	CreatedAt   *gtime.Time //
 	UpdatedAt   *gtime.Time //
 }

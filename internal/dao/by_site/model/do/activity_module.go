@@ -14,6 +14,7 @@ type ActivityModule struct {
 	g.Meta     `orm:"table:activity_module, do:true"`
 	Id         any         //
 	SiteId     any         // 站点ID
+	ChannelId  any         // 渠道id
 	ActivityId any         // 活动ID
 	ModuleType any         // 活动模块类型。1=充值；2=大转盘；3=开宝箱；4=砸金蛋；5=抢红包
 	ModuleId   any         // 活动模块ID

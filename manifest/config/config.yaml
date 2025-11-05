@@ -1,7 +1,7 @@
 # https://goframe.org/docs/web/server-config-file-template
 server:
   address:     ":8000"
-  openapiPath: "/api.json"
+#  openapiPath: "/api.json"
   swaggerPath: "/swagger"
 
 # https://goframe.org/docs/core/glog-config
@@ -14,24 +14,48 @@ database:
   # boya（默认）
   default:
     type: "mysql"
-    link: "mysql:root:654321@tcp(127.0.0.1:3306)/boya"
+    host: "127.0.0.1"
+    port: "3306"
+    user: "root"
+    pass: "654321"
+    name: "boya"
+    timezone: "Local"
+#    link: "mysql:root:654321@tcp(127.0.0.1:3306)/boya"
     debug: true
     charset: "utf8mb4"
   # by_site
   by_site:
     type: "mysql"
-    link: "mysql:root:654321@tcp(127.0.0.1:3306)/by_site"
+    host: "127.0.0.1"
+    port: "3306"
+    user: "root"
+    pass: "654321"
+    name: "by_site"
+    timezone: "Local"
+#    link: "mysql:root:654321@tcp(127.0.0.1:3306)/by_site"
     debug: true
     charset: "utf8mb4"
   # by_balance
   by_balance:
     type: "mysql"
-    link: "mysql:root:654321@tcp(127.0.0.1:3306)/by_balance"
+    host: "127.0.0.1"
+    port: "3306"
+    user: "root"
+    pass: "654321"
+    name: "by_balance"
+    timezone: "Local"
+#    link: "mysql:root:654321@tcp(127.0.0.1:3306)/by_balance"
     debug: true
     charset: "utf8mb4"
   # casion_by
   casion_by:
     type: "mysql"
-    link: "mysql:root:654321@tcp(127.0.0.1:3306)/casion_by"
+    host: "127.0.0.1"
+    port: "3306"
+    user: "root"
+    pass: "654321"
+    name: "casion_by"
+    timezone: "Local"
+#    link: "mysql:root:654321@tcp(127.0.0.1:3306)/casion_by"
     debug: true
     charset: "utf8mb4"

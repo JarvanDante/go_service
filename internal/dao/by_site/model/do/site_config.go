@@ -34,4 +34,5 @@ type SiteConfig struct {
 	UpdatedAt            *gtime.Time //
 	SwitchSign           any         //
 	RegMoney             any         // 注册送金额
+	MaxManualMoney       any         // 手动上分上限
 }

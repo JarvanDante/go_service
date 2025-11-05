@@ -23,6 +23,7 @@ type ActivityDao struct {
 type ActivityColumns struct {
 	Id               string // 活动ID
 	SiteId           string // 站点ID
+	ChannelId        string // 渠道id
 	ActivityName     string // 活动名称
 	Describe         string // 活动描述
 	PcCover          string // pc端封面
@@ -50,6 +51,7 @@ type ActivityColumns struct {
 var activityColumns = ActivityColumns{
 	Id:               "id",
 	SiteId:           "site_id",
+	ChannelId:        "channel_id",
 	ActivityName:     "activity_name",
 	Describe:         "describe",
 	PcCover:          "pc_cover",
