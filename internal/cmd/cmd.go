@@ -1,6 +1,7 @@
 package cmd
 
 import (
+	"go-service/internal/controller/backend"
 	"go-service/internal/controller/frontend"
 	"golang.org/x/net/context"
 
@@ -27,6 +28,7 @@ var (
 				group.Group("/backend", func(groupBackend *ghttp.RouterGroup) {
 					groupBackend.Bind(
 						frontend.NewDemo(),
+						backend.NewPublicController(),
 					)
 				})
 
