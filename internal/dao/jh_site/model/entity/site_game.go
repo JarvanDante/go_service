@@ -1,0 +1,22 @@
+// =================================================================================
+// Code generated and maintained by GoFrame CLI tool. DO NOT EDIT.
+// =================================================================================
+
+package entity
+
+import (
+	"github.com/gogf/gf/v2/os/gtime"
+)
+
+// SiteGame is the golang structure for table site_game.
+type SiteGame struct {
+	Id          uint        `json:"id"           orm:"id"           description:""`                           //
+	SiteId      int         `json:"site_id"      orm:"site_id"      description:"站点ID"`                       // 站点ID
+	Type        int         `json:"type"         orm:"type"         description:"游戏类型。1=体育；2=彩票；3=真人；4=电子游戏"` // 游戏类型。1=体育；2=彩票；3=真人；4=电子游戏
+	GameId      int         `json:"game_id"      orm:"game_id"      description:"游戏ID"`                       // 游戏ID
+	Status      int         `json:"status"       orm:"status"       description:"游戏是否打开或者或者关闭。1=打开；0=关闭"`     // 游戏是否打开或者或者关闭。1=打开；0=关闭
+	IsAvailable int         `json:"is_available" orm:"is_available" description:"游戏是否可用。总开关。1=可用；0=不可用"`      // 游戏是否可用。总开关。1=可用；0=不可用
+	Sort        int         `json:"sort"         orm:"sort"         description:""`                           //
+	CreatedAt   *gtime.Time `json:"created_at"   orm:"created_at"   description:""`                           //
+	UpdatedAt   *gtime.Time `json:"updated_at"   orm:"updated_at"   description:""`                           //
+}

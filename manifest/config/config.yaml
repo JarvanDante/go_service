@@ -11,51 +11,51 @@ logger:
 
 # https://goframe.org/docs/core/gdb-config-file
 database:
-  # boya（默认）
+  # jinhuang（默认）
   default:
     type: "mysql"
     host: "127.0.0.1"
     port: "3306"
     user: "root"
     pass: "654321"
-    name: "boya"
+    name: "jinhuang"
     timezone: "Local"
-#    link: "mysql:root:654321@tcp(127.0.0.1:3306)/boya"
+#    link: "mysql:root:654321@tcp(127.0.0.1:3306)/jinhuang"
     debug: true
     charset: "utf8mb4"
-  # by_site
-  by_site:
+  # jh_site
+  jh_site:
     type: "mysql"
     host: "127.0.0.1"
     port: "3306"
     user: "root"
     pass: "654321"
-    name: "by_site"
+    name: "jh_site"
     timezone: "Local"
-#    link: "mysql:root:654321@tcp(127.0.0.1:3306)/by_site"
+#    link: "mysql:root:654321@tcp(127.0.0.1:3306)/jh_site"
     debug: true
     charset: "utf8mb4"
-  # by_balance
-  by_balance:
+  # jh_balance
+  jh_balance:
     type: "mysql"
     host: "127.0.0.1"
     port: "3306"
     user: "root"
     pass: "654321"
-    name: "by_balance"
+    name: "jh_balance"
     timezone: "Local"
-#    link: "mysql:root:654321@tcp(127.0.0.1:3306)/by_balance"
+#    link: "mysql:root:654321@tcp(127.0.0.1:3306)/jh_balance"
     debug: true
     charset: "utf8mb4"
-  # casion_by
-  casion_by:
+  # jh_game
+  jh_game:
     type: "mysql"
     host: "127.0.0.1"
     port: "3306"
     user: "root"
     pass: "654321"
-    name: "casion_by"
+    name: "jh_game"
     timezone: "Local"
-#    link: "mysql:root:654321@tcp(127.0.0.1:3306)/casion_by"
+#    link: "mysql:root:654321@tcp(127.0.0.1:3306)/jh_game"
     debug: true
     charset: "utf8mb4"

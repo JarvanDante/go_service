@@ -4,33 +4,33 @@
 gfcli:
   gen:
     dao:
-      # boya（默认）
-      - link: "mysql:root:654321@tcp(127.0.0.1:3306)/boya"
-        path: "internal/dao/boya"
+      # jinhuang（默认）
+      - link: "mysql:root:654321@tcp(127.0.0.1:3306)/jinhuang"
+        path: "internal/dao/jinhuang"
         group: "default"                  # GoFrame中对应的group名
         descriptionTag: true
-        jsonCase: "CamelLower"            # JSON字段命名规则
+        jsonCase: "SnakeLower"            # JSON字段命名规则
         overwrite: true                   # 是否覆盖生成文件
-      # by_site
-      - link: "mysql:root:654321@tcp(127.0.0.1:3306)/by_site"
-        path: "internal/dao/by_site"
-        group: "by_site"                  # GoFrame中对应的group名
+      # jh_site
+      - link: "mysql:root:654321@tcp(127.0.0.1:3306)/jh_site"
+        path: "internal/dao/jh_site"
+        group: "jh_site"                  # GoFrame中对应的group名
         descriptionTag: true
-        jsonCase: "CamelLower"            # JSON字段命名规则
+        jsonCase: "SnakeLower"            # JSON字段命名规则
         overwrite: true                   # 是否覆盖生成文件
-      # by_balance
-      - link: "mysql:root:654321@tcp(127.0.0.1:3306)/by_balance"
-        path: "internal/dao/by_balance"
-        group: "by_balance"                  # GoFrame中对应的group名
+      # jh_balance
+      - link: "mysql:root:654321@tcp(127.0.0.1:3306)/jh_balance"
+        path: "internal/dao/jh_balance"
+        group: "jh_balance"                  # GoFrame中对应的group名
         descriptionTag: true
-        jsonCase: "CamelLower"            # JSON字段命名规则
+        jsonCase: "SnakeLower"            # JSON字段命名规则
         overwrite: true                   # 是否覆盖生成文件
-      # casion_by
-      - link: "mysql:root:654321@tcp(127.0.0.1:3306)/casion_by"
-        path: "internal/dao/casion_by"
-        group: "casion_by"                  # GoFrame中对应的group名
+      # jh_game
+      - link: "mysql:root:654321@tcp(127.0.0.1:3306)/jh_game"
+        path: "internal/dao/jh_game"
+        group: "jh_game"                  # GoFrame中对应的group名
         descriptionTag: true
-        jsonCase: "CamelLower"            # JSON字段命名规则
+        jsonCase: "SnakeLower"            # JSON字段命名规则
         overwrite: true                   # 是否覆盖生成文件
 
 
