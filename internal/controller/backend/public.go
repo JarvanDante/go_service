@@ -2,7 +2,6 @@ package backend
 
 import (
 	"context"
-	"fmt"
 	"github.com/gogf/gf/v2/frame/g"
 	"go-service/api/backendRoute"
 	"go-service/internal/model/response"
@@ -17,7 +16,6 @@ func NewPublicController() *PublicController {
 
 func (c *PublicController) Login(ctx context.Context, req *backendRoute.PublicReq) (res *response.Response, err error) {
 	token, err := backend.ServicePublic().LLogin(ctx, req)
-	fmt.Println(token)
 	if err != nil {
 		return nil, err
 	}

@@ -59,3 +59,6 @@ database:
 #    link: "mysql:root:654321@tcp(127.0.0.1:3306)/jh_game"
     debug: true
     charset: "utf8mb4"
+jwt:
+  secret: "7kPApNTrloUHNS29bLWbexySu2381X6P"
+  expire: 86400   # token有效期 1天

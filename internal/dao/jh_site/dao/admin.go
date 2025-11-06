@@ -5,7 +5,9 @@
 package dao
 
 import (
+	"context"
 	"go-service/internal/dao/jh_site/dao/internal"
+	"go-service/internal/dao/jinhuang/dao"
 )
 
 // adminDao is the data access object for the table admin.
@@ -20,3 +22,34 @@ var (
 )
 
 // Add your custom methods and functionality below.
+
+const StatusOn = 1 //开启
+
+//GetAdmin
+/**
+ * @desc：获取管理员
+ * @param siteId
+ * @return res
+ * @return err
+ * @author : Carson
+ */
+func GetAdmin(username string, password string) (res interface{}, err error) {
+
+	Site, _ := dao.GetSiteObject()
+	ctx := context.TODO()
+	query := Admin.Ctx(ctx)
+
+	where := map[string]interface{}{}
+	where["site_id"] = Site.Id
+	where["username"] = username
+	//where["password"], _ = helpers.Bcrypt(password)
+	where["status"] = StatusOn
+	where["delete_at"] = 0
+
+	res, err = query.Where(where).One()
+	if err != nil {
+		return nil, err
+	}
+
+	return
+}

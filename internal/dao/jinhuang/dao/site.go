@@ -5,7 +5,11 @@
 package dao
 
 import (
+	"context"
+	"encoding/json"
 	"go-service/internal/dao/jinhuang/dao/internal"
+	"go-service/internal/dao/jinhuang/model/do"
+	"go-service/utility/global"
 )
 
 // siteDao is the data access object for the table site.
@@ -20,3 +24,40 @@ var (
 )
 
 // Add your custom methods and functionality below.
+
+const StatusOn int = 1 //开启
+
+//GetSiteObject
+/**
+ * @desc：获取站点对象
+ * @return res
+ * @return err
+ * @author : Carson
+ */
+func GetSiteObject() (site *do.Site, err error) {
+	ctx := context.TODO()
+	query := Site.Ctx(ctx)
+
+	where := map[string]interface{}{}
+	where["code"] = global.SiteCode
+	where["status"] = StatusOn
+
+	result, err := query.Where(where).One()
+	if err != nil {
+		return nil, err
+	}
+
+	// 通过 JSON 序列化来转换
+	jsonData, err := json.Marshal(result)
+	if err != nil {
+		return nil, err
+	}
+
+	if err := json.Unmarshal(jsonData, &site); err != nil {
+		return nil, err
+	}
+
+	//fmt.Printf("站点信息: %+v\n", site)
+
+	return
+}
