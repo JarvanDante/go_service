@@ -7,8 +7,9 @@ package dao
 import (
 	"context"
 	"encoding/json"
+	"github.com/gogf/gf/v2/errors/gerror"
 	"go-service/internal/dao/jinhuang/dao/internal"
-	"go-service/internal/dao/jinhuang/model/do"
+	"go-service/internal/dao/jinhuang/model/entity"
 	"go-service/utility/global"
 )
 
@@ -34,7 +35,7 @@ const StatusOn int = 1 //开启
  * @return err
  * @author : Carson
  */
-func GetSiteObject() (site *do.Site, err error) {
+func GetSiteObject() (site *entity.Site, err error) {
 	ctx := context.TODO()
 	query := Site.Ctx(ctx)
 
@@ -44,20 +45,22 @@ func GetSiteObject() (site *do.Site, err error) {
 
 	result, err := query.Where(where).One()
 	if err != nil {
-		return nil, err
+		return nil, gerror.Wrapf(err, "查询站点失败, code=%s", global.SiteCode)
+	}
+
+	if result.IsEmpty() {
+		return nil, gerror.Newf("站点不存在, code=%s", global.SiteCode)
 	}
 
 	// 通过 JSON 序列化来转换
 	jsonData, err := json.Marshal(result)
 	if err != nil {
-		return nil, err
+		return nil, gerror.Wrap(err, "JSON序列化失败")
 	}
 
 	if err := json.Unmarshal(jsonData, &site); err != nil {
-		return nil, err
+		return nil, gerror.Wrap(err, "JSON反序列化失败")
 	}
-
-	//fmt.Printf("站点信息: %+v\n", site)
 
 	return
 }

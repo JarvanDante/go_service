@@ -6,8 +6,12 @@ package dao
 
 import (
 	"context"
+	"encoding/json"
+	"github.com/gogf/gf/v2/errors/gerror"
 	"go-service/internal/dao/jh_site/dao/internal"
+	"go-service/internal/dao/jh_site/model/entity"
 	"go-service/internal/dao/jinhuang/dao"
+	"go-service/utility/helpers"
 )
 
 // adminDao is the data access object for the table admin.
@@ -33,7 +37,7 @@ const StatusOn = 1 //开启
  * @return err
  * @author : Carson
  */
-func GetAdmin(username string, password string) (res interface{}, err error) {
+func GetAdmin(username string, password string) (admin *entity.Admin, err error) {
 
 	Site, _ := dao.GetSiteObject()
 	ctx := context.TODO()
@@ -46,9 +50,21 @@ func GetAdmin(username string, password string) (res interface{}, err error) {
 	where["status"] = StatusOn
 	where["delete_at"] = 0
 
-	res, err = query.Where(where).One()
+	res, err := query.Where(where).One()
 	if err != nil {
-		return nil, err
+		return nil, gerror.Wrap(err, "用户不存在")
+	}
+	jsonData, err := json.Marshal(res)
+	if err != nil {
+		return nil, gerror.Wrap(err, "json序列化失败")
+	}
+	err = json.Unmarshal(jsonData, &admin)
+	if err != nil {
+		return nil, gerror.Wrap(err, "json反序列化失败")
+	}
+
+	if ok := helpers.CompareBcrypt(admin.Password, password); ok != true {
+		return nil, gerror.New("密码不正确")
 	}
 
 	return

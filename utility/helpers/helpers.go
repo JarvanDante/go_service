@@ -1,6 +1,7 @@
 package helpers
 
 import (
+	"fmt"
 	"golang.org/x/crypto/bcrypt"
 	"os"
 )
@@ -59,4 +60,16 @@ func GetEnv(key, defaultValue string) string {
 		return value
 	}
 	return defaultValue
+}
+
+//Print
+/**
+ * @desc：打印
+ * @param str
+ * @author : Carson
+ */
+func Print(str interface{}) {
+	fmt.Println("*** 如下 ****")
+	fmt.Println(str)
+	fmt.Println("*** 如上 ****")
 }
