@@ -1,9 +1,14 @@
 package helpers
 
 import (
+	"context"
 	"fmt"
+	"github.com/gogf/gf/v2/frame/g"
+	"github.com/golang-jwt/jwt"
+	"go-service/internal/dao/jh_site/model/entity"
 	"golang.org/x/crypto/bcrypt"
 	"os"
+	"time"
 )
 
 //Bcrypt
@@ -72,4 +77,33 @@ func Print(str interface{}) {
 	fmt.Println("*** 如下 ****")
 	fmt.Println(str)
 	fmt.Println("*** 如上 ****")
+}
+
+//SetToken
+/**
+ * @desc：生成token
+ * @param ctx
+ * @param admin
+ * @return tokenString
+ * @return err
+ * @author : Carson
+ */
+func SetToken(ctx context.Context, admin *entity.Admin) (tokenString string, err error) {
+	secret := g.Cfg().MustGet(ctx, "jwt.secret").String()
+	//后台生成token
+	claims := jwt.MapClaims{
+		"app":      "jh",
+		"id":       admin.Id,
+		"site_id":  admin.SiteId,
+		"username": admin.Username,
+		"exp":      time.Now().Add(24 * time.Hour).Unix(),
+	}
+
+	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
+	tokenString, err = token.SignedString([]byte(secret))
+	if err != nil {
+		return "", err
+	}
+
+	return
 }
