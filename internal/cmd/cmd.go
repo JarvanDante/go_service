@@ -27,7 +27,6 @@ var (
 
 				group.Group("/backend", func(groupBackend *ghttp.RouterGroup) {
 					groupBackend.Bind(
-						frontend.NewDemo(),
 						backend.NewPublicController(),
 					)
 				})
