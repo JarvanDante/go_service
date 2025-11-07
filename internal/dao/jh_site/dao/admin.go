@@ -6,7 +6,6 @@ package dao
 
 import (
 	"context"
-	"encoding/json"
 	"github.com/gogf/gf/v2/errors/gerror"
 	"go-service/internal/dao/jh_site/dao/internal"
 	"go-service/internal/dao/jh_site/model/entity"
@@ -50,20 +49,16 @@ func GetAdmin(username string, password string) (admin *entity.Admin, err error)
 	where["status"] = StatusOn
 	where["delete_at"] = 0
 
-	res, err := query.Where(where).One()
+	err = query.Where(where).Scan(&admin)
 	if err != nil {
-		return nil, gerror.Wrap(err, "用户不存在")
+		return nil, err
 	}
-	jsonData, err := json.Marshal(res)
-	if err != nil {
-		return nil, gerror.Wrap(err, "json序列化失败")
-	}
-	err = json.Unmarshal(jsonData, &admin)
-	if err != nil {
-		return nil, gerror.Wrap(err, "json反序列化失败")
+	if admin == nil {
+		return nil, gerror.New("用户不存在")
 	}
 
-	if ok := helpers.CompareBcrypt(admin.Password, password); ok != true {
+	ok := helpers.CompareBcrypt(admin.Password, password)
+	if ok != true {
 		return nil, gerror.New("密码不正确")
 	}
 
