@@ -9,6 +9,7 @@ import (
 
 type Response struct {
 	Code    int         `json:"code"    description:"业务状态码" default:"200"`
+	Status  int         `json:"status" description:"状态"`
 	Message string      `json:"message" description:"返回说明"`
 	Data    interface{} `json:"data" description:"返回数据"`
 }
@@ -24,18 +25,20 @@ func JsonOk(r *ghttp.Request, data interface{}, msg ...string) {
 	}
 	r.Response.WriteJson(Response{
 		Code:    http.StatusOK,
+		Status:  1,
 		Message: m,
 		Data:    data,
 	})
 }
 
 func JsonErr(r *ghttp.Request, msg string, code ...int) {
-	c := 1
+	c := 500
 	if len(code) > 0 {
 		c = code[0]
 	}
 	r.Response.WriteJson(Response{
 		Code:    c,
+		Status:  0,
 		Message: msg,
 		Data:    nil,
 	})
