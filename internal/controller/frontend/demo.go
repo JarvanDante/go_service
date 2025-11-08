@@ -3,7 +3,7 @@ package frontend
 import (
 	"fmt"
 	"github.com/gogf/gf/v2/frame/g"
-	frontend2 "go-service/api/frontend"
+	"go-service/api/frontendRoute"
 	"golang.org/x/net/context"
 )
 
@@ -13,7 +13,7 @@ func NewDemo() *DemoController {
 	return &DemoController{}
 }
 
-func (c *DemoController) Index(ctx context.Context, req *frontend2.DemoReq) (res *frontend2.DemoRes, err error) {
+func (c *DemoController) Index(ctx context.Context, req *frontendRoute.DemoReq) (res *frontendRoute.DemoRes, err error) {
 
 	fmt.Println(g.Model("site"))
 	site := g.Model("site")
@@ -24,9 +24,9 @@ func (c *DemoController) Index(ctx context.Context, req *frontend2.DemoReq) (res
 	//	req.R
 	//}
 
-	//msg, err := frontend.Demo().Index(ctx)
+	//msg, err := frontendRoute.Demo().Index(ctx)
 	if err != nil {
-		return &frontend2.DemoRes{Message: ""}, nil
+		return &frontendRoute.DemoRes{Message: ""}, nil
 	}
-	return &frontend2.DemoRes{Message: siteOne["name"].String()}, nil
+	return &frontendRoute.DemoRes{Message: siteOne["name"].String()}, nil
 }
