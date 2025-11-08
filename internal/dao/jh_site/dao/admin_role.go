@@ -5,7 +5,9 @@
 package dao
 
 import (
+	"context"
 	"go-service/internal/dao/jh_site/dao/internal"
+	"go-service/internal/dao/jh_site/model/entity"
 )
 
 // adminRoleDao is the data access object for the table admin_role.
@@ -20,3 +22,30 @@ var (
 )
 
 // Add your custom methods and functionality below.
+
+// 常量
+
+var RoleStatusOn = 1 //开启
+
+//GetRoleList
+/**
+ * @desc：获取站点职务列表
+ * @param siteId
+ * @return role
+ * @return err
+ * @author : Carson
+ */
+func GetRoleList(siteId uint) (role []*entity.AdminRole, err error) {
+
+	//site.Id
+	where := map[string]interface{}{}
+	where["site_id"] = siteId
+	where["status"] = RoleStatusOn
+
+	err = AdminRole.Ctx(context.TODO()).Where(where).Fields("id", "name").Scan(&role)
+	if err != nil {
+		return nil, err
+	}
+
+	return role, err
+}

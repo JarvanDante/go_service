@@ -26,7 +26,9 @@ var (
 
 // Add your custom methods and functionality below.
 
-const StatusOn = 1 //开启
+// 常量
+
+var AdminStatusOn = 1 //开启
 
 //GetAdmin
 /**
@@ -46,7 +48,7 @@ func GetAdmin(username string, password string) (admin *entity.Admin, err error)
 	where["site_id"] = Site.Id
 	where["username"] = username
 	//where["password"], _ = helpers.Bcrypt(password)
-	where["status"] = StatusOn
+	where["status"] = AdminStatusOn
 	where["delete_at"] = 0
 
 	err = query.Where(where).Scan(&admin)

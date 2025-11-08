@@ -27,7 +27,12 @@ func (s *sMiddleware) LAuthToken(r *ghttp.Request) {
 
 	// 设置上下文，后面的接口就能直接取
 	r.SetCtxVar("admin", adminInfo)
-	//admin := r.GetCtxVar("admin").Map()
+	// 从 context 中获取 admin 信息
+	//	adminValue := g.RequestFromCtx(ctx).GetCtxVar("admin")
+	//	if adminValue.IsNil() {
+	//		return "", gerror.New("未找到用户信息")
+	//	}
+	//	adminInfo := adminValue.Map()
 
 	//前置中间件
 	r.Middleware.Next()

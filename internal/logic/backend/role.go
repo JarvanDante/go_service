@@ -2,10 +2,10 @@ package backend
 
 import (
 	"context"
-	"fmt"
-	"github.com/gogf/gf/v2/errors/gerror"
-	"github.com/gogf/gf/v2/frame/g"
 	"go-service/api/backendRoute"
+	daosite "go-service/internal/dao/jh_site/dao"
+	"go-service/internal/dao/jh_site/model/entity"
+	daojh "go-service/internal/dao/jinhuang/dao"
 	"go-service/internal/service/backend"
 )
 
@@ -16,23 +16,27 @@ func init() {
 	backend.RegisterRole(&sRole{})
 }
 
-func (s *sRole) LIndex(ctx context.Context, req *backendRoute.RoleReq) (string, error) {
+//LIndex
+/**
+ * @desc：角色列表
+ * @param ctx
+ * @param req
+ * @return role
+ * @return err
+ * @author : Carson
+ */
+func (s *sRole) LIndex(ctx context.Context, req *backendRoute.RoleReq) (role []*entity.AdminRole, err error) {
 
-	// 从 context 中获取 admin 信息
-	adminValue := g.RequestFromCtx(ctx).GetCtxVar("admin")
-	if adminValue.IsNil() {
-		return "", gerror.New("未找到用户信息")
+	site, err := daojh.GetSiteObject()
+	if err != nil {
+		return nil, err
 	}
 
-	adminInfo := adminValue.Map()
+	role, err = daosite.GetRoleList(site.Id)
+	if err != nil {
+		return nil, err
+	}
 
-	// 使用管理员信息
-	userID := adminInfo["id"]
-	username := adminInfo["username"]
-	siteID := adminInfo["site_id"]
-
-	fmt.Printf("当前用户: %s (ID: %v, SiteID: %v)\n", username, userID, siteID)
-
-	return "操作成功", nil
+	return
 
 }
