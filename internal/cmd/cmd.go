@@ -3,6 +3,7 @@ package cmd
 import (
 	"go-service/internal/controller/backend"
 	"go-service/internal/controller/frontend"
+	"go-service/internal/service/middleware"
 	"golang.org/x/net/context"
 
 	"github.com/gogf/gf/v2/frame/g"
@@ -18,7 +19,10 @@ var (
 		Func: func(ctx context.Context, parser *gcmd.Parser) (err error) {
 			s := g.Server()
 			s.Group("/api", func(group *ghttp.RouterGroup) {
-				group.Middleware(ghttp.MiddlewareHandlerResponse)
+				group.Middleware(
+					ghttp.MiddlewareCORS,
+					ghttp.MiddlewareHandlerResponse,
+				)
 				group.Group("/frontend", func(groupFront *ghttp.RouterGroup) {
 					groupFront.Bind(
 						frontend.NewDemo(),
@@ -26,8 +30,12 @@ var (
 				})
 
 				group.Group("/backend", func(groupBackend *ghttp.RouterGroup) {
+					groupBackend.Middleware(
+						middleware.ServiceMiddleware().LAuthToken,
+					)
 					groupBackend.Bind(
 						backend.NewPublicController(),
+						backend.NewRoleController(),
 					)
 				})
 

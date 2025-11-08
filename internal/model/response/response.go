@@ -31,6 +31,10 @@ func JsonOk(r *ghttp.Request, data interface{}, msg ...string) {
 	})
 }
 
+func JsonErrCtx(ctx context.Context, msg string) {
+	JsonErr(g.RequestFromCtx(ctx), msg, 500)
+}
+
 func JsonErr(r *ghttp.Request, msg string, code ...int) {
 	c := 500
 	if len(code) > 0 {

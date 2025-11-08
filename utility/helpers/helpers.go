@@ -3,7 +3,9 @@ package helpers
 import (
 	"context"
 	"fmt"
+	"github.com/gogf/gf/v2/errors/gerror"
 	"github.com/gogf/gf/v2/frame/g"
+	"github.com/gogf/gf/v2/net/ghttp"
 	"github.com/golang-jwt/jwt"
 	"go-service/internal/dao/jh_site/model/entity"
 	"golang.org/x/crypto/bcrypt"
@@ -106,4 +108,64 @@ func SetToken(ctx context.Context, admin *entity.Admin) (tokenString string, err
 	}
 
 	return
+}
+
+//ParseToken
+/**
+ * @desc：解析token
+ * @param ctx
+ * @param tokenString
+ * @return jwt.MapClaims
+ * @return error
+ * @author : Carson
+ */
+func ParseToken(ctx context.Context, tokenString string) (jwt.MapClaims, error) {
+	secret := g.Cfg().MustGet(ctx, "jwt.secret").String()
+
+	// Parse token
+	token, err := jwt.Parse(tokenString, func(token *jwt.Token) (interface{}, error) {
+		// 验证签名方式是否一致
+		if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
+			return nil, gerror.New("无效的签名方法")
+		}
+		return []byte(secret), nil
+	})
+
+	if err != nil {
+		return nil, err
+	}
+
+	// 获取 Claims
+	if claims, ok := token.Claims.(jwt.MapClaims); ok && token.Valid {
+		return claims, nil
+	}
+
+	return nil, gerror.New("无效token")
+}
+
+//GetAdminInfoFromToken
+/**
+ * @desc：获取admin信息
+ * @param r
+ * @return map[string]interface{}
+ * @return error
+ * @author : Carson
+ */
+func GetAdminInfoFromToken(r *ghttp.Request) (map[string]interface{}, error) {
+	tokenString := r.Header.Get("Authorization")
+	// 如果是 "Bearer xxx" 格式，截取一下
+	if len(tokenString) > 7 && tokenString[:7] == "Bearer " {
+		tokenString = tokenString[7:]
+	}
+
+	claims, err := ParseToken(r.Context(), tokenString)
+	if err != nil {
+		return nil, err
+	}
+
+	return map[string]interface{}{
+		"id":       claims["id"],
+		"site_id":  claims["site_id"],
+		"username": claims["username"],
+	}, nil
 }
