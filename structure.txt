@@ -1,0 +1,72 @@
+.
+├── Makefile
+├── README.md
+├── api
+│   ├── backendRoute
+│   │   ├── public.go
+│   │   └── role.go
+│   └── frontendRoute
+│       └── demo.go
+├── go.mod
+├── go.sum
+├── go_service_core.sh
+├── go_service_core.zip
+├── hack
+│   ├── config.yaml
+│   ├── hack-cli.mk
+│   └── hack.mk
+├── internal
+│   ├── cmd
+│   │   └── cmd.go
+│   ├── consts
+│   │   └── consts.go
+│   ├── controller
+│   │   ├── backend
+│   │   └── frontend
+│   ├── dao
+│   │   ├── internal
+│   │   ├── jh_balance
+│   │   ├── jh_game
+│   │   ├── jh_site
+│   │   └── jinhuang
+│   ├── logic
+│   │   ├── backend
+│   │   ├── frontend
+│   │   └── middleware
+│   ├── model
+│   │   ├── do
+│   │   ├── entity
+│   │   └── response
+│   ├── packed
+│   │   └── packed.go
+│   └── service
+│       ├── backend
+│       ├── frontend
+│       └── middleware
+├── main
+├── main.go
+├── manifest
+│   ├── config
+│   │   └── config.yaml
+│   ├── deploy
+│   │   └── kustomize
+│   ├── docker
+│   │   ├── Dockerfile
+│   │   └── docker.sh
+│   ├── i18n
+│   └── protobuf
+├── resource
+│   ├── public
+│   │   ├── html
+│   │   ├── plugin
+│   │   └── resource
+│   └── template
+├── showdoc_api.sh
+├── structure.txt
+└── utility
+    ├── global
+    │   └── global.go
+    └── helpers
+        └── helpers.go
+
+45 directories, 24 files
