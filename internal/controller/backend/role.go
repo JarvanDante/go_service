@@ -32,8 +32,19 @@ func NewRoleController() *RoleController {
  * @remark 备注
  * @number 1
  */
-func (c *RoleController) Index(ctx context.Context, req *backendRoute.RoleReq) (res *response.Response, err error) {
+func (c *RoleController) Index(ctx context.Context, req *backendRoute.RolesReq) (res *response.Response, err error) {
 	data, err := backend.ServiceRole().LIndex(ctx, req)
+	if err != nil {
+		return nil, err
+	}
+
+	response.JsonOkCtx(ctx, data)
+
+	return
+}
+
+func (c *RoleController) Permissions(ctx context.Context, req *backendRoute.PermissionsReq) (res *response.Response, err error) {
+	data, err := backend.ServiceRole().LPermissions(ctx, req)
 	if err != nil {
 		return nil, err
 	}
