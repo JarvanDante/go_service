@@ -5,7 +5,9 @@
 package dao
 
 import (
+	"context"
 	"go-service/internal/dao/jinhuang/dao/internal"
+	"go-service/internal/dao/jinhuang/model/entity"
 )
 
 // adminPermissionDao is the data access object for the table admin_permission.
@@ -20,3 +22,27 @@ var (
 )
 
 // Add your custom methods and functionality below.
+
+//GetPermissionsBySite
+/**
+ * @desc：获取指定站点的权限列表
+ * @param ctx
+ * @param siteID
+ * @return []*entity.AdminPermission
+ * @return error
+ * @author : Carson
+ */
+func GetPermissionsBySite(ctx context.Context) ([]*entity.AdminPermission, error) {
+	var list []*entity.AdminPermission
+
+	// 按照 sort 顺序查询全部权限
+	err := AdminPermission.Ctx(ctx).
+		Order("sort ASC, id ASC").
+		Scan(&list)
+
+	if err != nil {
+		return nil, err
+	}
+
+	return list, nil
+}

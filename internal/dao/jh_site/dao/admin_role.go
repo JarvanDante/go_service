@@ -42,7 +42,7 @@ func GetRoleList(siteId uint) (role []*entity.AdminRole, err error) {
 	where["site_id"] = siteId
 	where["status"] = RoleStatusOn
 
-	err = AdminRole.Ctx(context.TODO()).Where(where).Fields("id", "name").Scan(&role)
+	err = AdminRole.Ctx(context.TODO()).Where(where).Fields("id", "name", "permissions").Scan(&role)
 	if err != nil {
 		return nil, err
 	}

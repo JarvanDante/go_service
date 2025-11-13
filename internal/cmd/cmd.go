@@ -30,11 +30,15 @@ var (
 				})
 
 				group.Group("/backend", func(groupBackend *ghttp.RouterGroup) {
+					groupBackend.Bind(
+						backend.NewPublicController(),
+					)
+				})
+				group.Group("/backend", func(groupBackend *ghttp.RouterGroup) {
 					groupBackend.Middleware(
 						middleware.ServiceMiddleware().LAuthToken,
 					)
 					groupBackend.Bind(
-						backend.NewPublicController(),
 						backend.NewRoleController(),
 					)
 				})
