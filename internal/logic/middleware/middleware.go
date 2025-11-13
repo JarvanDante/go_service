@@ -1,12 +1,15 @@
 package middleware
 
 import (
+	"bytes"
 	"github.com/gogf/gf/v2/errors/gerror"
 	"github.com/gogf/gf/v2/frame/g"
 	"github.com/gogf/gf/v2/net/ghttp"
 	"go-service/internal/model/response"
 	"go-service/internal/service/middleware"
 	"go-service/utility/helpers"
+	"io"
+	"strings"
 )
 
 type sMiddleware struct {
@@ -16,6 +19,12 @@ func init() {
 	middleware.RegisterMiddleware(&sMiddleware{})
 }
 
+//LAuthToken
+/**
+ * @desc：解析token
+ * @param r
+ * @author : Carson
+ */
 func (s *sMiddleware) LAuthToken(r *ghttp.Request) {
 	//获取token
 	adminInfo, err := helpers.GetAdminInfoFromToken(r)
@@ -41,6 +50,12 @@ func (s *sMiddleware) LAuthToken(r *ghttp.Request) {
 
 }
 
+//LErrorHandler
+/**
+ * @desc：拦截错误
+ * @param r
+ * @author : Carson
+ */
 func (s *sMiddleware) LErrorHandler(r *ghttp.Request) {
 	r.Middleware.Next()
 	ctx := r.GetCtx()
@@ -57,11 +72,58 @@ func (s *sMiddleware) LErrorHandler(r *ghttp.Request) {
 			}
 		}
 		response.JsonErrCtx(ctx, message)
-		//r.Response.WriteJson(v1.DefaultHandlerResponse{
-		//	Code: http.StatusInternalServerError, //请求成功  情况：1 异常 2 系统报错 都为code=500
-		//	Msg:  message,
-		//	Data: "",
-		//})
+
 		return
 	}
+}
+
+//LRequestLog
+/**
+ * @desc：记录请求参数的中间件
+ * @return ghttp.HandlerFunc
+ * @author : Carson
+ */
+func (s *sMiddleware) LRequestLog(r *ghttp.Request) {
+
+	// ====== 获取 Body（支持 JSON） ======
+	var bodyBytes []byte
+	if r.Request.Body != nil {
+		bodyBytes, _ = io.ReadAll(r.Request.Body)
+		r.Request.Body = io.NopCloser(bytes.NewBuffer(bodyBytes)) // 重要：写回去
+	}
+
+	// ====== 基础信息 ======
+	clientIp := helpers.RemoteIp(r.Request)
+	host := r.URL.Host
+	path := r.URL.Path
+	method := r.Method
+	rawQuery := r.URL.RawQuery
+
+	// ====== token 脱敏 ======
+	bearer := r.Header.Get("Authorization")
+	token := strings.TrimPrefix(bearer, "Bearer ")
+	if len(token) > 10 {
+		token = token[:10] + "****" // 简单脱敏
+	}
+
+	// ====== 记录日志 ======
+	ctx := r.GetCtx()
+
+	data := g.Map{
+		"host":     host,
+		"path":     path,
+		"method":   method,
+		"clientIp": clientIp,
+	}
+
+	if method == "POST" {
+		data["body"] = string(bodyBytes)
+	} else {
+		data["rawQuery"] = rawQuery
+	}
+
+	g.Log().Info(ctx, "[Request]", data)
+
+	// ====== 执行后续 ======
+	r.Middleware.Next()
 }

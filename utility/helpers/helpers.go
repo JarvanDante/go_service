@@ -7,8 +7,10 @@ import (
 	"github.com/gogf/gf/v2/frame/g"
 	"github.com/gogf/gf/v2/net/ghttp"
 	"github.com/golang-jwt/jwt"
+	"github.com/thinkeridea/go-extend/exnet"
 	"go-service/internal/dao/jh_site/model/entity"
 	"golang.org/x/crypto/bcrypt"
+	"net/http"
 	"os"
 	"time"
 )
@@ -168,4 +170,19 @@ func GetAdminInfoFromToken(r *ghttp.Request) (map[string]interface{}, error) {
 		"site_id":  claims["site_id"],
 		"username": claims["username"],
 	}, nil
+}
+
+//RemoteIp
+/**
+ * @desc：获取远程ip
+ * @param r
+ * @return res
+ * @author : Carson
+ */
+func RemoteIp(r *http.Request) (res interface{}) {
+	ip := exnet.ClientPublicIP(r)
+	if ip == "" {
+		ip = exnet.ClientIP(r)
+	}
+	return ip
 }

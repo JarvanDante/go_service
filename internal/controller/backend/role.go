@@ -100,6 +100,8 @@ func (c *RoleController) Permissions(ctx context.Context, req *backendRoute.Perm
  * @number 1
  */
 func (c *RoleController) Create(ctx context.Context, req *backendRoute.CreateReq) (res *response.Response, err error) {
+	g.Log("error").Error(ctx, g.Map{"msg": "接口Create", "func": "Create"})
+
 	err = backend.ServiceRole().LCreate(ctx, req)
 	if err != nil {
 		return nil, err

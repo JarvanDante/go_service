@@ -6,8 +6,26 @@ server:
 
 # https://goframe.org/docs/core/glog-config
 logger:
+  path: "logs/"
+  file: "{Y-m-d}.log"
   level : "all"
-  stdout: true
+  header: true
+  stdout: false
+  info:
+    path: "./logs/user/info/"
+    file: "{Y-m-d}.log"
+    level: "INFO"
+    stdout: false
+  error:
+    path: "./logs/user/error/"
+    file: "{Y-m-d}.log"
+    level: "ERRO"
+    stdout: false
+  panic:
+    path: "./logs/system/panic/"
+    file: "{Y-m-d}.log"
+    level: "CRIT"
+    stdout: false
 
 # https://goframe.org/docs/core/gdb-config-file
 database:

@@ -46,6 +46,9 @@ func Init() error {
 	//获取当前站点信息
 	//Site, _ = dao.GetSiteObject()
 
+	//设置日志格式为json
+	glog.SetDefaultHandler(glog.HandlerJson)
+
 	return nil
 }
 

@@ -36,6 +36,7 @@ var (
 				})
 				group.Group("/backend", func(groupBackend *ghttp.RouterGroup) {
 					groupBackend.Middleware(
+						middleware.ServiceMiddleware().LRequestLog,
 						middleware.ServiceMiddleware().LAuthToken,
 						middleware.ServiceMiddleware().LErrorHandler,
 					)

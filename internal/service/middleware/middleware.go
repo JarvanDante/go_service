@@ -6,6 +6,7 @@ import (
 
 type (
 	IMiddleware interface {
+		LRequestLog(r *ghttp.Request)
 		LAuthToken(r *ghttp.Request)
 		LErrorHandler(r *ghttp.Request)
 	}
