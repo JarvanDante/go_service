@@ -9,3 +9,8 @@ type RolesReq struct {
 type PermissionsReq struct {
 	g.Meta `path:"/permissions" method:"get" summary:"获取站点职务权限列表"`
 }
+
+type CreateReq struct {
+	g.Meta `path:"/create-role" method:"post" summary:"添加职务"`
+	Name   string `json:"Name" v:"required#角色名必填" dc:"角色名"`
+}

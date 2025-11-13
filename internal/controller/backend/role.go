@@ -2,6 +2,7 @@ package backend
 
 import (
 	"context"
+	"github.com/gogf/gf/v2/frame/g"
 	"go-service/api/backendRoute"
 	"go-service/internal/model/response"
 	"go-service/internal/service/backend"
@@ -47,8 +48,8 @@ func (c *RoleController) Index(ctx context.Context, req *backendRoute.RolesReq) 
 /**
  * showdoc
  * @catalog 后台/员工
- * @title 获取职务权限列表
- * @description 获取职务权限列表
+ * @title 职务权限列表
+ * @description 职务权限列表
  * @method get
  * @url /app/permissions
  * @param token 必选 string 员工token
@@ -75,7 +76,36 @@ func (c *RoleController) Permissions(ctx context.Context, req *backendRoute.Perm
 		return nil, err
 	}
 
-	response.JsonOkCtx(ctx, data)
+	response.JsonOkCtx(ctx, data, "获取数据成功")
+
+	return
+}
+
+//Create
+/**
+ * showdoc
+ * @catalog 后台/员工
+ * @title 添加职务
+ * @description 添加职务
+ * @method post
+ * @url /app/create-role
+ * @param token 必选 string 员工token
+ * @param name 必选 string 角色名称
+ * @return {"code":200,"status":1,"message":"\u6dfb\u52a0\u6210\u529f","data":null}
+ * @return_param code int 状态码
+ * @return_param status int 成功/失败状态
+ * @return_param message string 提示说明
+ * @return_param data string 主要数据
+ * @remark 备注
+ * @number 1
+ */
+func (c *RoleController) Create(ctx context.Context, req *backendRoute.CreateReq) (res *response.Response, err error) {
+	err = backend.ServiceRole().LCreate(ctx, req)
+	if err != nil {
+		return nil, err
+	}
+
+	response.JsonOkCtx(ctx, g.Map{}, "操作成功")
 
 	return
 }

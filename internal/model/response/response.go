@@ -36,14 +36,19 @@ func JsonErrCtx(ctx context.Context, msg string) {
 }
 
 func JsonErr(r *ghttp.Request, msg string, code ...int) {
+	m := "default"
+	if len(msg) > 0 {
+		m = msg
+	}
 	c := 500
 	if len(code) > 0 {
 		c = code[0]
 	}
+	r.Response.ClearBuffer()
 	r.Response.WriteJson(Response{
 		Code:    c,
 		Status:  0,
-		Message: msg,
+		Message: m,
 		Data:    nil,
 	})
 }

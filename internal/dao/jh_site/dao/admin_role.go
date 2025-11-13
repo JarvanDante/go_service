@@ -6,6 +6,8 @@ package dao
 
 import (
 	"context"
+	"github.com/gogf/gf/v2/errors/gerror"
+	"go-service/api/backendRoute"
 	"go-service/internal/dao/jh_site/dao/internal"
 	"go-service/internal/dao/jh_site/model/entity"
 )
@@ -48,4 +50,30 @@ func GetRoleList(siteId uint) (role []*entity.AdminRole, err error) {
 	}
 
 	return role, err
+}
+
+func AddRole(ctx context.Context, siteId int, req *backendRoute.CreateReq) error {
+	// 1. 先查是否存在
+	var role *entity.AdminRole
+	err := AdminRole.Ctx(ctx).
+		Where("site_id", siteId).
+		Where("name", req.Name).
+		Scan(&role)
+
+	if err != nil {
+		return err
+	}
+
+	// 2. 已存在 → 返回提示
+	if role != nil && role.Id > 0 {
+		return gerror.New("角色名称已存在")
+	}
+
+	// 3. 不存在 → 插入
+	_, err = AdminRole.Ctx(ctx).Insert(entity.AdminRole{
+		Name:   req.Name,
+		SiteId: siteId,
+	})
+
+	return err
 }

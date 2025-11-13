@@ -60,7 +60,7 @@ func (s *sRole) LPermissions(ctx context.Context, req *backendRoute.PermissionsR
 		return nil, err
 	}
 
-	// 2️⃣ 查询所有权限（假设你的 DAO 有方法 GetPermissionsBySite）
+	// 2️⃣ 查询所有权限
 	permissionEntities, err := daojh.GetPermissionsBySite(ctx)
 	if err != nil {
 		return nil, err
@@ -91,6 +91,24 @@ func (s *sRole) LPermissions(ctx context.Context, req *backendRoute.PermissionsR
 	}
 	return res, nil
 }
+
+func (s *sRole) LCreate(ctx context.Context, req *backendRoute.CreateReq) (err error) {
+
+	site, err := daojh.GetSiteObject()
+	if err != nil {
+		return err
+	}
+
+	err = daosite.AddRole(ctx, int(site.Id), req)
+	if err != nil {
+		return err
+	}
+
+	return
+
+}
+
+//-----以下私有方法-------
 
 //buildPermissionTree
 /**

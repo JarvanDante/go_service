@@ -7,6 +7,7 @@ import (
 type (
 	IMiddleware interface {
 		LAuthToken(r *ghttp.Request)
+		LErrorHandler(r *ghttp.Request)
 	}
 )
 
