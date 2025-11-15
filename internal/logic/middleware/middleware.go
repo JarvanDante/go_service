@@ -2,6 +2,8 @@ package middleware
 
 import (
 	"bytes"
+	"crypto/rand"
+	"encoding/hex"
 	"github.com/gogf/gf/v2/errors/gerror"
 	"github.com/gogf/gf/v2/frame/g"
 	"github.com/gogf/gf/v2/net/ghttp"
@@ -9,7 +11,7 @@ import (
 	"go-service/internal/service/middleware"
 	"go-service/utility/helpers"
 	"io"
-	"strings"
+	"time"
 )
 
 type sMiddleware struct {
@@ -83,47 +85,43 @@ func (s *sMiddleware) LErrorHandler(r *ghttp.Request) {
  * @return ghttp.HandlerFunc
  * @author : Carson
  */
+func genTraceId() string {
+	b := make([]byte, 16)
+	_, _ = rand.Read(b)
+	return hex.EncodeToString(b)
+}
+
 func (s *sMiddleware) LRequestLog(r *ghttp.Request) {
+	start := time.Now()
 
-	// ====== 获取 Body（支持 JSON） ======
-	var bodyBytes []byte
+	// ===== 读取 Request Body =====
+	var reqBody []byte
 	if r.Request.Body != nil {
-		bodyBytes, _ = io.ReadAll(r.Request.Body)
-		r.Request.Body = io.NopCloser(bytes.NewBuffer(bodyBytes)) // 重要：写回去
+		reqBody, _ = io.ReadAll(r.Request.Body)
+		r.Request.Body = io.NopCloser(bytes.NewBuffer(reqBody))
 	}
 
-	// ====== 基础信息 ======
-	clientIp := helpers.RemoteIp(r.Request)
-	host := r.URL.Host
-	path := r.URL.Path
-	method := r.Method
-	rawQuery := r.URL.RawQuery
+	// 使用多个参数，避免字符串拼接
+	g.Log().Info(r.GetCtx(),
+		"[Request]",
+		"method:", r.Method,
+		"path:", r.URL.Path,
+		"query:", r.GetQueryMap(),
+		"ip:", r.GetClientIp(),
+	)
 
-	// ====== token 脱敏 ======
-	bearer := r.Header.Get("Authorization")
-	token := strings.TrimPrefix(bearer, "Bearer ")
-	if len(token) > 10 {
-		token = token[:10] + "****" // 简单脱敏
-	}
-
-	// ====== 记录日志 ======
-	ctx := r.GetCtx()
-
-	data := g.Map{
-		"host":     host,
-		"path":     path,
-		"method":   method,
-		"clientIp": clientIp,
-	}
-
-	if method == "POST" {
-		data["body"] = string(bodyBytes)
-	} else {
-		data["rawQuery"] = rawQuery
-	}
-
-	g.Log().Info(ctx, "[Request]", data)
-
-	// ====== 执行后续 ======
+	// ===== 执行后续逻辑 =====
 	r.Middleware.Next()
+
+	// ===== 捕获 Response =====
+	resBody := r.Response.BufferString()
+
+	g.Log().Info(r.GetCtx(),
+		"[Response]",
+		"status:", r.Response.Status,
+		"cost_ms:", time.Since(start).Milliseconds(),
+		"response:", string(resBody),
+	)
+
+	return
 }
