@@ -134,7 +134,17 @@ func (s *sRole) LUpdate(ctx context.Context, req *backendRoute.UpdateReq) (err e
 	return
 }
 
-//-----以下私有方法-------
+func (s *sRole) LDelete(ctx context.Context, req *backendRoute.DeleteReq) (err error) {
+
+	err = daosite.DeleteRole(ctx, req)
+	if err != nil {
+		return err
+	}
+
+	return
+}
+
+//-------------------------以下私有方法-------------------------
 
 //buildPermissionTree
 /**

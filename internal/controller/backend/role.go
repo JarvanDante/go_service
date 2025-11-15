@@ -141,3 +141,34 @@ func (c *RoleController) Update(ctx context.Context, req *backendRoute.UpdateReq
 
 	return
 }
+
+//Delete
+/**
+ * showdoc
+ * @catalog 后台/员工
+ * @title 删除职务
+ * @description 删除职务
+ * @method post
+ * @url /app/delete-role
+ * @param token 必选 string 员工token
+ * @param id 必选 string 角色ID
+ * @return {"code":200,"status":1,"message":"删除成功","data":{}}
+ * @return_param code int 状态码
+ * @return_param status int 成功/失败状态
+ * @return_param message string 提示说明
+ * @return_param data string 主要数据
+ * @remark 备注
+ * @number 1
+ */
+func (c *RoleController) Delete(ctx context.Context, req *backendRoute.DeleteReq) (res *response.Response, err error) {
+	//g.Log("error").Error(ctx, g.Map{"msg": "接口Create", "func": "Create"})
+
+	err = backend.ServiceRole().LDelete(ctx, req)
+	if err != nil {
+		return nil, err
+	}
+
+	response.JsonOkCtx(ctx, g.Map{}, "删除成功")
+
+	return
+}

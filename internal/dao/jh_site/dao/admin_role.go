@@ -121,3 +121,23 @@ func UpdateRole(ctx context.Context, req *backendRoute.UpdateReq) error {
 
 	return err
 }
+
+func DeleteRole(ctx context.Context, req *backendRoute.DeleteReq) error {
+	// 转换 ID
+	id := gconv.Int(req.Id)
+
+	// 1. 查询是否存在
+	var role *entity.AdminRole
+	err := AdminRole.Ctx(ctx).Where("id", id).Scan(&role)
+	if err != nil {
+		return err
+	}
+	if role == nil {
+		return gerror.New("角色不存在")
+	}
+
+	// 2. 删除（只更新需要的字段）
+	_, err = AdminRole.Ctx(ctx).Where("id", id).Delete()
+
+	return err
+}

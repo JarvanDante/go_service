@@ -20,3 +20,8 @@ type UpdateReq struct {
 	Id     int    `json:"id" v:"required#角色ID必填" dc:"角色ID"`
 	Name   string `json:"name" v:"required#角色名必填" dc:"角色名"`
 }
+
+type DeleteReq struct {
+	g.Meta `path:"/delete-role" method:"post" summary:"删除职务"`
+	Id     int `json:"id" v:"required#角色ID必填" dc:"角色ID"`
+}
