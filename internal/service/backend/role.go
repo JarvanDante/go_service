@@ -12,6 +12,7 @@ type (
 		LIndex(ctx context.Context, req *backendRoute.RolesReq) (role []*entity.AdminRole, err error)
 		LPermissions(ctx context.Context, req *backendRoute.PermissionsReq) (res *response.RolePermissionsRes, err error)
 		LCreate(ctx context.Context, req *backendRoute.CreateReq) (err error)
+		LUpdate(ctx context.Context, req *backendRoute.UpdateReq) (err error)
 	}
 )
 

@@ -12,5 +12,11 @@ type PermissionsReq struct {
 
 type CreateReq struct {
 	g.Meta `path:"/create-role" method:"post" summary:"添加职务"`
-	Name   string `json:"Name" v:"required#角色名必填" dc:"角色名"`
+	Name   string `json:"name" v:"required#角色名必填" dc:"角色名"`
+}
+
+type UpdateReq struct {
+	g.Meta `path:"/update-role" method:"post" summary:"编辑职务"`
+	Id     int    `json:"id" v:"required#角色ID必填" dc:"角色ID"`
+	Name   string `json:"name" v:"required#角色名必填" dc:"角色名"`
 }

@@ -100,14 +100,44 @@ func (c *RoleController) Permissions(ctx context.Context, req *backendRoute.Perm
  * @number 1
  */
 func (c *RoleController) Create(ctx context.Context, req *backendRoute.CreateReq) (res *response.Response, err error) {
-	g.Log("error").Error(ctx, g.Map{"msg": "接口Create", "func": "Create"})
-
 	err = backend.ServiceRole().LCreate(ctx, req)
 	if err != nil {
 		return nil, err
 	}
 
-	response.JsonOkCtx(ctx, g.Map{}, "操作成功")
+	response.JsonOkCtx(ctx, g.Map{}, "添加成功")
+
+	return
+}
+
+//Update
+/**
+ * showdoc
+ * @catalog 后台/员工
+ * @title 编辑职务
+ * @description 编辑职务
+ * @method post
+ * @url /app/update-role
+ * @param token 必选 string 员工token
+ * @param id 必选 string 角色ID
+ * @param name 必选 string 角色名称
+ * @return {"code":200,"status":1,"message":"编辑成功","data":{}}
+ * @return_param code int 状态码
+ * @return_param status int 成功/失败状态
+ * @return_param message string 提示说明
+ * @return_param data string 主要数据
+ * @remark 备注
+ * @number 1
+ */
+func (c *RoleController) Update(ctx context.Context, req *backendRoute.UpdateReq) (res *response.Response, err error) {
+	//g.Log("error").Error(ctx, g.Map{"msg": "接口Create", "func": "Create"})
+
+	err = backend.ServiceRole().LUpdate(ctx, req)
+	if err != nil {
+		return nil, err
+	}
+
+	response.JsonOkCtx(ctx, g.Map{}, "编辑成功")
 
 	return
 }

@@ -92,6 +92,14 @@ func (s *sRole) LPermissions(ctx context.Context, req *backendRoute.PermissionsR
 	return res, nil
 }
 
+//LCreate
+/**
+ * @desc：添加角色
+ * @param ctx
+ * @param req
+ * @return err
+ * @author : Carson
+ */
 func (s *sRole) LCreate(ctx context.Context, req *backendRoute.CreateReq) (err error) {
 
 	site, err := daojh.GetSiteObject()
@@ -106,6 +114,24 @@ func (s *sRole) LCreate(ctx context.Context, req *backendRoute.CreateReq) (err e
 
 	return
 
+}
+
+//LUpdate
+/**
+ * @desc：编辑角色
+ * @param ctx
+ * @param req
+ * @return err
+ * @author : Carson
+ */
+func (s *sRole) LUpdate(ctx context.Context, req *backendRoute.UpdateReq) (err error) {
+
+	err = daosite.UpdateRole(ctx, req)
+	if err != nil {
+		return err
+	}
+
+	return
 }
 
 //-----以下私有方法-------

@@ -7,6 +7,8 @@ package dao
 import (
 	"context"
 	"github.com/gogf/gf/v2/errors/gerror"
+	"github.com/gogf/gf/v2/frame/g"
+	"github.com/gogf/gf/v2/util/gconv"
 	"go-service/api/backendRoute"
 	"go-service/internal/dao/jh_site/dao/internal"
 	"go-service/internal/dao/jh_site/model/entity"
@@ -52,6 +54,15 @@ func GetRoleList(siteId uint) (role []*entity.AdminRole, err error) {
 	return role, err
 }
 
+//AddRole
+/**
+ * @desc：添加角色
+ * @param ctx
+ * @param siteId
+ * @param req
+ * @return error
+ * @author : Carson
+ */
 func AddRole(ctx context.Context, siteId int, req *backendRoute.CreateReq) error {
 	// 1. 先查是否存在
 	var role *entity.AdminRole
@@ -74,6 +85,39 @@ func AddRole(ctx context.Context, siteId int, req *backendRoute.CreateReq) error
 		Name:   req.Name,
 		SiteId: siteId,
 	})
+
+	return err
+}
+
+//UpdateRole
+/**
+ * @desc：编辑角色
+ * @param ctx
+ * @param req
+ * @return error
+ * @author : Carson
+ */
+func UpdateRole(ctx context.Context, req *backendRoute.UpdateReq) error {
+	// 转换 ID
+	id := gconv.Int(req.Id)
+
+	// 1. 查询是否存在
+	var role *entity.AdminRole
+	err := AdminRole.Ctx(ctx).Where("id", id).Scan(&role)
+	if err != nil {
+		return err
+	}
+	if role == nil {
+		return gerror.New("角色不存在")
+	}
+
+	// 2. 更新（只更新需要的字段）
+	_, err = AdminRole.Ctx(ctx).
+		Where("id", id).
+		Data(g.Map{
+			"name": req.Name,
+		}).
+		Update()
 
 	return err
 }
