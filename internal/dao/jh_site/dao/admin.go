@@ -30,7 +30,7 @@ var (
 
 var AdminStatusOn = 1 //开启
 
-//GetAdmin
+//GetAdminByPassword
 /**
  * @desc：获取管理员
  * @param siteId
@@ -38,7 +38,7 @@ var AdminStatusOn = 1 //开启
  * @return err
  * @author : Carson
  */
-func GetAdmin(username string, password string) (admin *entity.Admin, err error) {
+func GetAdminByPassword(username string, password string) (admin *entity.Admin, err error) {
 
 	Site, _ := dao.GetSiteObject()
 	ctx := context.TODO()
@@ -62,6 +62,35 @@ func GetAdmin(username string, password string) (admin *entity.Admin, err error)
 	ok := helpers.CompareBcrypt(admin.Password, password)
 	if ok != true {
 		return nil, gerror.New("密码不正确")
+	}
+
+	return
+}
+
+//GetAdminById
+/**
+ * @desc：获取管理员实例
+ * @param id
+ * @return admin
+ * @return err
+ * @author : Carson
+ */
+func GetAdminById(id uint) (admin *entity.Admin, err error) {
+
+	ctx := context.TODO()
+	query := Admin.Ctx(ctx)
+
+	where := map[string]interface{}{}
+	where["id"] = id
+	where["status"] = AdminStatusOn
+	where["delete_at"] = 0
+
+	err = query.Where(where).Scan(&admin)
+	if err != nil {
+		return nil, err
+	}
+	if admin == nil {
+		return nil, gerror.New("管理员不存在")
 	}
 
 	return

@@ -8,10 +8,13 @@ import (
 	"context"
 	"github.com/gogf/gf/v2/errors/gerror"
 	"github.com/gogf/gf/v2/frame/g"
+	"github.com/gogf/gf/v2/text/gstr"
 	"github.com/gogf/gf/v2/util/gconv"
 	"go-service/api/backendRoute"
 	"go-service/internal/dao/jh_site/dao/internal"
 	"go-service/internal/dao/jh_site/model/entity"
+	daojh "go-service/internal/dao/jinhuang/dao"
+	entityjh "go-service/internal/dao/jinhuang/model/entity"
 )
 
 // adminRoleDao is the data access object for the table admin_role.
@@ -140,4 +143,57 @@ func DeleteRole(ctx context.Context, req *backendRoute.DeleteReq) error {
 	_, err = AdminRole.Ctx(ctx).Where("id", id).Delete()
 
 	return err
+}
+
+//GetRole
+/**
+ * @desc：获取角色信息
+ * @param ctx
+ * @param roleId
+ * @return role
+ * @return err
+ * @author : Carson
+ */
+func GetRole(ctx context.Context, roleId int) (role *entity.AdminRole, err error) {
+	err = AdminRole.Ctx(ctx).Where("id", roleId).Scan(&role)
+	return
+}
+
+//GetPermissionIds
+/**
+ * @desc：获取权限 ID 数组
+ * @param role
+ * @return []int
+ * @author : Carson
+ */
+func GetPermissionIds(role *entity.AdminRole) []int {
+	if role == nil || role.Permissions == "" {
+		return []int{}
+	}
+	arr := gstr.Split(role.Permissions, ",")
+	return gconv.Ints(arr)
+}
+
+//GetPermissions
+/**
+ * @desc：查询权限表信息
+ * @param ctx
+ * @param ids
+ * @return []*entity.AdminPermission
+ * @return error
+ * @author : Carson
+ */
+func GetPermissions(ctx context.Context, ids []int) ([]*entityjh.AdminPermission, error) {
+	var list []*entityjh.AdminPermission
+	if len(ids) == 0 {
+		return list, nil
+	}
+
+	err := daojh.AdminPermission.Ctx(ctx).
+		WhereIn("id", ids).
+		Where("status", 1).
+		Order("sort asc").
+		Scan(&list)
+
+	return list, err
 }

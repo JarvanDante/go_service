@@ -7,6 +7,8 @@ import (
 	"github.com/gogf/gf/v2/errors/gerror"
 	"github.com/gogf/gf/v2/frame/g"
 	"github.com/gogf/gf/v2/net/ghttp"
+	"github.com/gogf/gf/v2/util/gconv"
+	"go-service/internal/dao/jh_site/dao"
 	"go-service/internal/model/response"
 	"go-service/internal/service/middleware"
 	"go-service/utility/helpers"
@@ -38,8 +40,12 @@ func (s *sMiddleware) LAuthToken(r *ghttp.Request) {
 		})
 	}
 
+	adminEntity, err := dao.GetAdminById(gconv.Uint(adminInfo["id"]))
+	if err != nil {
+		return
+	}
 	// 设置上下文，后面的接口就能直接取
-	r.SetCtxVar("admin", adminInfo)
+	r.SetCtxVar("admin", adminEntity)
 	// 从 context 中获取 admin 信息
 	//	adminValue := g.RequestFromCtx(ctx).GetCtxVar("admin")
 	//	if adminValue.IsNil() {

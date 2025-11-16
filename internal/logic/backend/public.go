@@ -29,7 +29,7 @@ func (s *sPublic) LLogin(ctx context.Context, req *backendRoute.PublicReq) (stri
 	username := req.Username
 	password := req.Password
 	//验证
-	admin, err := dao.GetAdmin(username, password)
+	admin, err := dao.GetAdminByPassword(username, password)
 	if err != nil {
 		return "", err
 	}

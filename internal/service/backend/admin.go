@@ -1,0 +1,23 @@
+package backend
+
+import (
+	"context"
+	"go-service/api/backendRoute"
+	"go-service/internal/model/response"
+)
+
+type (
+	IAdmin interface {
+		LGetInfo(ctx context.Context, req *backendRoute.GetInfoReq) (res *response.GetInfoRes, err error)
+	}
+)
+
+var localAdmin IAdmin
+
+func ServiceAdmin() IAdmin {
+	return localAdmin
+}
+
+func RegisterAdmin(p IAdmin) {
+	localAdmin = p
+}
