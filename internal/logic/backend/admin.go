@@ -48,7 +48,7 @@ func (s *sAdmin) LGetInfo(ctx context.Context, req *backendRoute.GetInfoReq) (re
 	return &response.GetInfoRes{
 		Roles:        []string{role.Name},
 		Name:         admin.Username,
-		Avatar:       "",
+		Avatar:       "https://wpimg.wallstcn.com/577965b9-bb9e-4e02-9f0c-095b41417191",
 		Introduction: "",
 		Menus:        menuTree,
 	}, nil
