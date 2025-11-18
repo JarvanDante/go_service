@@ -9,6 +9,7 @@ import (
 	"github.com/gogf/gf/v2/net/ghttp"
 	"github.com/gogf/gf/v2/util/gconv"
 	"go-service/internal/dao/jh_site/dao"
+	daojh "go-service/internal/dao/jinhuang/dao"
 	"go-service/internal/model/response"
 	"go-service/internal/service/middleware"
 	"go-service/utility/helpers"
@@ -52,6 +53,12 @@ func (s *sMiddleware) LAuthToken(r *ghttp.Request) {
 	//		return "", gerror.New("未找到用户信息")
 	//	}
 	//	adminInfo := adminValue.Map()
+
+	siteEntity, err := daojh.GetSiteObject()
+	if err != nil {
+		return
+	}
+	r.SetCtxVar("site", siteEntity)
 
 	//前置中间件
 	r.Middleware.Next()

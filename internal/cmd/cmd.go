@@ -44,6 +44,7 @@ var (
 					groupBackend.Bind(
 						backend.NewRoleController(),
 						backend.NewAdminController(),
+						backend.NewSiteController(),
 					)
 				})
 
