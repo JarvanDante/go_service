@@ -2,7 +2,6 @@ package backend
 
 import (
 	"context"
-	"github.com/gogf/gf/v2/frame/g"
 	"go-service/api/backendRoute"
 	"go-service/internal/model/response"
 	"go-service/internal/service/backend"
@@ -65,7 +64,7 @@ func (c *AdminController) GetInfo(ctx context.Context, req *backendRoute.GetInfo
  * @number 1
  */
 func (c *AdminController) Logout(ctx context.Context, req *backendRoute.LogoutReq) (res *response.Response, err error) {
-	response.JsonOkCtx(ctx, g.Map{}, "退出成功")
+	response.JsonOkCtx(ctx, nil, "退出成功")
 
 	return
 }

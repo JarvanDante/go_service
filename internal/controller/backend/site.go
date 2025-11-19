@@ -59,3 +59,32 @@ func (c *SiteController) BasicSetting(ctx context.Context, req *backendRoute.Bas
 
 	return
 }
+
+//UpdateBasicSetting
+/**
+ * showdoc
+ * @catalog 后台/系统/全局设置
+ * @title 修改站点基本信息
+ * @description 修改站点基本信息
+ * @method post
+ * @url /app/update-basic-setting
+ * @param token 必选 string 员工token
+ * @return {"code":200,"status":1,"message":"设置成功","data":null}
+ * @return_param code int 状态码
+ * @return_param status int 成功/失败状态
+ * @return_param message string 提示说明
+ * @return_param data array 数组
+ * @remark 备注
+ * @number 1
+ */
+func (c *SiteController) UpdateBasicSetting(ctx context.Context, req *backendRoute.UpdateBasicSettingReq) (res *response.Response, err error) {
+
+	err = backend.ServiceSite().LUpdateBasicSetting(ctx, req)
+	if err != nil {
+		return nil, err
+	}
+
+	response.JsonOkCtx(ctx, nil, "设置成功")
+
+	return
+}

@@ -3,6 +3,7 @@ package backend
 import (
 	"context"
 	"github.com/gogf/gf/v2/frame/g"
+	"go-service/api/backendRoute"
 	daobalance "go-service/internal/dao/jh_balance/dao"
 	daosite "go-service/internal/dao/jh_site/dao"
 	"go-service/internal/dao/jinhuang/model/entity"
@@ -42,6 +43,8 @@ func (s *sSite) LBasicSetting(ctx context.Context) (map[string]interface{}, erro
 	msg := "您好，系统正在维护中，估计需要1个小时左右，给您造成不便，敬请谅解！"
 
 	data := map[string]interface{}{
+		"site_name":              site.Name,
+		"site_code":              site.Code,
 		"register_time_interval": model["register_time_interval"],
 		"switch_register":        model["switch_register"],
 		"is_close":               model["is_close"],
@@ -49,6 +52,7 @@ func (s *sSite) LBasicSetting(ctx context.Context) (map[string]interface{}, erro
 		"service_url":            model["url_service"],
 		"agent_url":              model["url_agent_pc"],
 		"mobile_url":             model["url_mobile"],
+		"mobile_logo":            model["mobile_logo"],
 		"agent_register_url":     model["url_agent_register"],
 		"min_withdraw":           model["min_withdraw"],
 		"max_withdraw":           model["max_withdraw"],
@@ -81,4 +85,38 @@ func IfEmpty(v interface{}, def string) string {
 		return def
 	}
 	return v.(string)
+}
+
+//LUpdateBasicSetting
+/**
+ * @desc：修改站点基本信息
+ * @param ctx
+ * @param req
+ * @return error
+ * @author : Carson
+ */
+func (s *sSite) LUpdateBasicSetting(ctx context.Context, req *backendRoute.UpdateBasicSettingReq) error {
+	//从 ctx 中获取 site
+	site := g.RequestFromCtx(ctx).GetCtxVar("site").Val().(*entity.Site)
+
+	_, err := daosite.SiteConfig.Ctx(ctx).
+		Data(g.Map{
+			"register_time_interval": req.RegisterTimeInterval,
+			"switch_register":        req.SwitchRegister,
+			"is_close":               req.IsClose,
+			"agent_url":              req.AgentUrl,
+			"agent_register_url":     req.AgentRegisterUrl,
+			"service_url":            req.ServiceUrl,
+			"mobile_url":             req.MobileUrl,
+			"min_withdraw":           req.MinWithdraw,
+			"max_withdraw":           req.MaxWithdraw,
+			"mobile_logo":            req.MobileLogo,
+		}).
+		Where("site_id", site.Id).
+		Update()
+	if err != nil {
+		return err
+	}
+
+	return nil
 }

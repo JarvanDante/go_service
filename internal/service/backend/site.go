@@ -2,11 +2,13 @@ package backend
 
 import (
 	"context"
+	"go-service/api/backendRoute"
 )
 
 type (
 	ISite interface {
 		LBasicSetting(ctx context.Context) (map[string]interface{}, error)
+		LUpdateBasicSetting(ctx context.Context, req *backendRoute.UpdateBasicSettingReq) error
 	}
 )
 
