@@ -2,11 +2,15 @@ package backend
 
 import (
 	"context"
+	"github.com/gogf/gf/v2/errors/gerror"
 	"github.com/gogf/gf/v2/frame/g"
 	"go-service/api/backendRoute"
 	daobalance "go-service/internal/dao/jh_balance/dao"
 	daosite "go-service/internal/dao/jh_site/dao"
+	entitysite "go-service/internal/dao/jh_site/model/entity"
 	"go-service/internal/dao/jinhuang/model/entity"
+
+	entitynew "go-service/internal/model/entity"
 	"go-service/internal/service/backend"
 )
 
@@ -119,4 +123,74 @@ func (s *sSite) LUpdateBasicSetting(ctx context.Context, req *backendRoute.Updat
 	}
 
 	return nil
+}
+
+//LRegisterSetting
+/**
+ * @desc：获取会员注册设置
+ * @param ctx
+ * @return interface{}
+ * @return error
+ * @author : Carson
+ */
+func (s *sSite) LRegisterSetting(ctx context.Context) (interface{}, error) {
+
+	site := g.RequestFromCtx(ctx).GetCtxVar("site").Val().(*entity.Site)
+
+	fields := daosite.SiteRegister.Columns()
+
+	var list []*entitynew.SiteRegister
+	where := map[string]interface{}{}
+	where["site_id"] = site.Id
+
+	err := daosite.SiteRegister.Ctx(ctx).
+		Where(where).
+		Fields(fields.Id, fields.Type, fields.Name, fields.FieldName, fields.Display, fields.Required).
+		Scan(&list)
+
+	if err != nil {
+		return nil, err
+	}
+
+	return list, nil
+
+}
+
+func (s *sSite) LUpdateRegisterSetting(ctx context.Context, req *backendRoute.UpdateRegisterSettingReq) error {
+	//从 ctx 中获取 site
+	site := g.RequestFromCtx(ctx).GetCtxVar("site").Val().(*entity.Site)
+
+	siteId := site.Id
+
+	fields := daosite.SiteRegister.Columns()
+
+	// 是否存在记录
+	var model entitysite.SiteRegister
+	err := daosite.SiteRegister.Ctx(ctx).
+		Where(fields.SiteId, siteId).
+		Where(fields.Type, req.Type).
+		Scan(&model)
+	if err != nil {
+		return err
+	}
+
+	data := g.Map{
+		fields.SiteId:   siteId,
+		fields.Type:     req.Type,
+		fields.Display:  req.Display,
+		fields.Required: req.Required,
+	}
+
+	if model.Id > 0 {
+		// 更新
+		_, err = daosite.SiteRegister.Ctx(ctx).
+			Data(data).
+			Where(fields.Id, model.Id).
+			Update()
+	} else {
+		// 插入
+		return gerror.New("配置不存在")
+	}
+
+	return err
 }

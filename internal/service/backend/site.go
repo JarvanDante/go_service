@@ -9,6 +9,8 @@ type (
 	ISite interface {
 		LBasicSetting(ctx context.Context) (map[string]interface{}, error)
 		LUpdateBasicSetting(ctx context.Context, req *backendRoute.UpdateBasicSettingReq) error
+		LRegisterSetting(ctx context.Context) (interface{}, error)
+		LUpdateRegisterSetting(ctx context.Context, req *backendRoute.UpdateRegisterSettingReq) error
 	}
 )
 

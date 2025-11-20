@@ -88,3 +88,70 @@ func (c *SiteController) UpdateBasicSetting(ctx context.Context, req *backendRou
 
 	return
 }
+
+//RegisterSetting
+/**
+ * showdoc
+ * @catalog 后台/系统/全局设置
+ * @title 获取会员注册设置
+ * @description 获取会员注册设置
+ * @method get
+ * @url /app/register-setting
+ * @param token 必选 string 员工token
+ * @return {"code":200,"status":1,"message":"获取数据成功","data":[{"id":1,"type":1,"name":"用户名","field_name":"username","display":1,"required":1},{"id":2,"type":2,"name":"密码","field_name":"password","display":1,"required":1},{"id":3,"type":3,"name":"验证码","field_name":"code","display":1,"required":1},{"id":4,"type":4,"name":"资金密码","field_name":"pay_password","display":0,"required":0},{"id":5,"type":5,"name":"密保问题","field_name":"safe_question","display":0,"required":0},{"id":6,"type":6,"name":"真实姓名","field_name":"realname","display":0,"required":0},{"id":7,"type":7,"name":"手机","field_name":"mobile","display":1,"required":0},{"id":8,"type":8,"name":"邮箱","field_name":"email","display":0,"required":0},{"id":9,"type":9,"name":"手机验证码","field_name":"phone_code","display":1,"required":1}]}
+ * @return_param code int 状态码
+ * @return_param status int 成功/失败状态
+ * @return_param message string 提示说明
+ * @return_param data array 数组
+ * @return_param data.id int 数据id
+ * @return_param data.type int 类型
+ * @return_param data.name string 中文名称
+ * @return_param data.field_name string 英文名称
+ * @return_param data.display int 是否显示
+ * @return_param data.required int 是否必需
+ * @remark 备注
+ * @number 1
+ */
+func (c *SiteController) RegisterSetting(ctx context.Context, req *backendRoute.RegisterSettingReq) (res *response.Response, err error) {
+
+	data, err := backend.ServiceSite().LRegisterSetting(ctx)
+	if err != nil {
+		return nil, err
+	}
+
+	response.JsonOkCtx(ctx, data, "获取数据成功")
+
+	return
+}
+
+//UpdateRegisterSetting
+/**
+ * showdoc
+ * @catalog 后台/系统/全局设置
+ * @title 修改会员注册设置
+ * @description 修改会员注册设置
+ * @method post
+ * @url /app/update-register-setting
+ * @param token 必选 string 员工token
+ * @param type 必选 string 类型
+ * @param display 必选 int 是否显示
+ * @param required 必选 int 是否必须
+ * @return {"code":200,"status":1,"message":"设置成功","data":null}
+ * @return_param code int 状态码
+ * @return_param status int 成功/失败状态
+ * @return_param message string 提示说明
+ * @return_param data array 数组
+ * @remark 备注
+ * @number 1
+ */
+func (c *SiteController) UpdateRegisterSetting(ctx context.Context, req *backendRoute.UpdateRegisterSettingReq) (res *response.Response, err error) {
+
+	err = backend.ServiceSite().LUpdateRegisterSetting(ctx, req)
+	if err != nil {
+		return nil, err
+	}
+
+	response.JsonOkCtx(ctx, nil, "设置成功")
+
+	return
+}

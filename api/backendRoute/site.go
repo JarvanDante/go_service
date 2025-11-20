@@ -19,3 +19,14 @@ type UpdateBasicSettingReq struct {
 	IsClose              int     `json:"is_close" dc:"关闭网站"`
 	SwitchRegister       int     `json:"switch_register" dc:"是否开放注册"`
 }
+
+type RegisterSettingReq struct {
+	g.Meta `path:"/register-setting" method:"get" summary:"获取会员注册配置"`
+}
+
+type UpdateRegisterSettingReq struct {
+	g.Meta   `path:"/update-register-setting" method:"post" summary:"修改会员注册配置"`
+	Type     int `json:"type"      v:"required#类型必填|integer#类型为整数" dc:"类型"`
+	Display  int `json:"display"   v:"required#是否显示必填|in:0,1#是否显示类型错误" dc:"是否显示"`
+	Required int `json:"required"  v:"required#是否必须必填|in:0,1#是否必须类型错误" dc:"是否必须"`
+}
