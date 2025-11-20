@@ -20,6 +20,6 @@ func ServiceSite() ISite {
 	return localSite
 }
 
-func RegisterSiten(p ISite) {
+func RegisterSite(p ISite) {
 	localSite = p
 }

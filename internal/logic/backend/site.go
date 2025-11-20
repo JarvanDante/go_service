@@ -18,7 +18,7 @@ type sSite struct {
 }
 
 func init() {
-	backend.RegisterSiten(&sSite{})
+	backend.RegisterSite(&sSite{})
 }
 
 //LBasicSetting
