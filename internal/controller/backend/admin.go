@@ -68,3 +68,45 @@ func (c *AdminController) Logout(ctx context.Context, req *backendRoute.LogoutRe
 
 	return
 }
+
+//Admins
+/**
+ * showdoc
+ * @catalog 后台/员工
+ * @title 员工列表
+ * @description 员工列表
+ * @method get
+ * @url /app/admins
+ * @param token 必选 string 员工token
+ * @param status 必选 int 状态。1=启用；0=停用
+ * @param username 必选 string 用户名
+ * @param page 可选 string 页数
+ * @param size 可选 string 数码
+ * @return {"code":200,"status":1,"message":"获取数据成功","data":{"count":3,"list":[{"admin_role_id":1,"admin_role_name":"管理员","id":41,"last_login_ip":"","last_login_time":null,"nickname":"qwe789","status":1,"username":"qwe789"},{"admin_role_id":1,"admin_role_name":"管理员","id":29,"last_login_ip":"211.24.114.214","last_login_time":"2018-04-05 14:47:20","nickname":"pgcs","status":1,"username":"pgcs8"},{"admin_role_id":1,"admin_role_name":"管理员","id":28,"last_login_ip":"103.204.180.60","last_login_time":"2018-03-22 13:40:36","nickname":"cz2018","status":1,"username":"cz2018"}]}}
+ * @return_param code int 状态码
+ * @return_param status int 成功/失败状态
+ * @return_param message string 提示说明
+ * @return_param data string 主要数据
+ * @return_param data.count int 总条数据
+ * @return_param data.list.id int id
+ * @return_param data.list.admin_role_id int 角色id
+ * @return_param data.list.admin_role_name string 角色名称
+ * @return_param data.list.last_login_ip string 最后登录
+ * @return_param data.list.last_login_time string 最后登录时间
+ * @return_param data.list.nickname string 昵称
+ * @return_param data.list.status int 状态
+ * @return_param data.list.username string 用户名
+ * @remark 备注
+ * @number 1
+ */
+func (c *AdminController) Admins(ctx context.Context, req *backendRoute.AdminsReq) (res *response.Response, err error) {
+
+	data, err := backend.ServiceAdmin().LAdmins(ctx, req)
+	if err != nil {
+		response.JsonErrCtx(ctx, err.Error())
+		return
+	}
+	response.JsonOkCtx(ctx, data, "获取数据成功")
+
+	return
+}

@@ -9,6 +9,7 @@ import (
 type (
 	IAdmin interface {
 		LGetInfo(ctx context.Context, req *backendRoute.GetInfoReq) (res *response.GetInfoRes, err error)
+		LAdmins(ctx context.Context, req *backendRoute.AdminsReq) (res interface{}, err error)
 	}
 )
 
