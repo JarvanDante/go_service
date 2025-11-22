@@ -20,8 +20,8 @@ type AdminsReq struct {
 
 type CreateAdminReq struct {
 	g.Meta   `path:"/create-admin" method:"post" summary:"添加员工"`
-	Username string `json:"username" v:"required#用户名必填" dc:"用户名"`
-	Password string `json:"password" v:"required#密码必填" dc:"密码"`
+	Username string `json:"username" v:"required|length:4,12#请输入用户名|用户名长度4-12" dc:"用户名"`
+	Password string `json:"password" v:"required|password2#请输入密码|密码包含大小写字母和数字并且长度在6~18的" dc:"密码"`
 	Nickname string `json:"nickname" v:"required#昵称必填" dc:"昵称"`
 	Role     int    `json:"role" v:"required#角色必填" dc:"角色"`
 	Status   int    `json:"status" v:"required#状态必填" dc:"状态"`

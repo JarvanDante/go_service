@@ -2,10 +2,13 @@ package backend
 
 import (
 	"context"
+	"github.com/gogf/gf/v2/errors/gerror"
 	"github.com/gogf/gf/v2/frame/g"
+	"github.com/gogf/gf/v2/os/gtime"
 	"github.com/gogf/gf/v2/util/gconv"
 	"go-service/api/backendRoute"
 	daosite "go-service/internal/dao/jh_site/dao"
+	"go-service/internal/dao/jh_site/model/do"
 	entitysite "go-service/internal/dao/jh_site/model/entity"
 	"go-service/internal/dao/jinhuang/model/entity"
 	"go-service/internal/model/response"
@@ -106,7 +109,7 @@ func (s *sAdmin) LAdmins(ctx context.Context, req *backendRoute.AdminsReq) (inte
 	size := *req.Size
 
 	var list []*entitysite.Admin
-	err := m.Page(page, size).Scan(&list)
+	err := m.OrderDesc("id").Page(page, size).Scan(&list)
 	if err != nil {
 		return nil, err
 	}
@@ -144,4 +147,52 @@ func (s *sAdmin) LAdmins(ctx context.Context, req *backendRoute.AdminsReq) (inte
 		"list":  result,
 		"count": total,
 	}, nil
+}
+
+func (s *sAdmin) LCreateAdmin(ctx context.Context, req *backendRoute.CreateAdminReq) (err error) {
+	site := g.RequestFromCtx(ctx).GetCtxVar("site").Val().(*entity.Site)
+
+	// 判断是否已存在
+	exist, err := daosite.Admin.
+		Ctx(ctx).
+		Where(do.Admin{
+			SiteId:   site.Id,
+			Username: req.Username,
+			DeleteAt: 0,
+		}).One()
+
+	if err != nil {
+		return err
+	}
+	if !exist.IsEmpty() {
+		return gerror.New("用户名已经被使用")
+	}
+
+	bcrypt, err := helpers.Bcrypt(req.Password)
+	if err != nil {
+		return err
+	}
+	// 新增
+	_, err = daosite.Admin.Ctx(ctx).Data(do.Admin{
+		SiteId:      site.Id,
+		Username:    req.Username,
+		Nickname:    req.Nickname,
+		Password:    bcrypt,
+		AdminRoleId: req.Role,
+		Status:      req.Status,
+		DeleteAt:    0,
+		CreatedAt:   gtime.Now(),
+	}).Insert()
+
+	if err != nil {
+		return err
+	}
+
+	// 日志
+	err = daosite.AddAdminLog(ctx, "添加员工："+req.Username)
+	if err != nil {
+		return err
+	}
+
+	return nil
 }

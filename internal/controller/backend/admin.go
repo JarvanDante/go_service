@@ -110,3 +110,34 @@ func (c *AdminController) Admins(ctx context.Context, req *backendRoute.AdminsRe
 
 	return
 }
+
+//CreateAdmin
+/**
+ * showdoc
+ * @catalog 后台/员工
+ * @title 添加员工
+ * @description 添加员工
+ * @method post
+ * @url /app/create-admin
+ * @param token 必选 string 员工token
+ * @param username 必选 string 员工用户名
+ * @param password 必选 string 员工密码
+ * @param nickname 必选 string 员工昵称
+ * @param role 必选 int 员工角色
+ * @param status 必选 int 员工状态
+ * @return {"code":200,"status":1,"message":"添加员工成功","data":null}
+ * @return_param code int 状态码
+ * @return_param status int 成功/失败状态
+ * @return_param message string 提示说明
+ * @return_param data array 数组
+ * @remark 备注
+ * @number 1
+ */
+func (c *AdminController) CreateAdmin(ctx context.Context, req *backendRoute.CreateAdminReq) (res *response.Response, err error) {
+
+	err = backend.ServiceAdmin().LCreateAdmin(ctx, req)
+
+	response.JsonOkCtx(ctx, nil, "添加员工成功")
+
+	return
+}

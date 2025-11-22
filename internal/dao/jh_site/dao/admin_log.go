@@ -5,7 +5,13 @@
 package dao
 
 import (
+	"context"
+	"github.com/gogf/gf/v2/frame/g"
+	"github.com/gogf/gf/v2/os/gtime"
 	"go-service/internal/dao/jh_site/dao/internal"
+	"go-service/internal/dao/jh_site/model/do"
+	entitysite "go-service/internal/dao/jh_site/model/entity"
+	"go-service/internal/dao/jinhuang/model/entity"
 )
 
 // adminLogDao is the data access object for the table admin_log.
@@ -20,3 +26,28 @@ var (
 )
 
 // Add your custom methods and functionality below.
+
+//AddAdminLog
+/**
+ * @desc：添加后台管理员操作日志
+ * @param ctx
+ * @param remark
+ * @return err
+ * @author : Carson
+ */
+func AddAdminLog(ctx context.Context, remark string) (err error) {
+
+	site := g.RequestFromCtx(ctx).GetCtxVar("site").Val().(*entity.Site)
+	admin := g.RequestFromCtx(ctx).GetCtxVar("admin").Val().(*entitysite.Admin)
+
+	_, err = AdminLog.Ctx(ctx).Data(do.AdminLog{
+		SiteId:        site.Id,
+		AdminId:       admin.Id,
+		AdminUsername: admin.Username,
+		Ip:            "127.0.0.1",
+		Remark:        remark,
+		CreatedAt:     gtime.Now(),
+	}).Insert()
+
+	return
+}
