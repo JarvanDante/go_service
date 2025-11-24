@@ -46,6 +46,7 @@ var (
 						backend.NewAdminController(),
 						backend.NewSiteController(),
 						backend.NewGameController(),
+						backend.NewLogController(),
 					)
 				})
 
