@@ -14,6 +14,7 @@ type (
 		LCreate(ctx context.Context, req *backendRoute.CreateReq) (err error)
 		LUpdate(ctx context.Context, req *backendRoute.UpdateReq) (err error)
 		LDelete(ctx context.Context, req *backendRoute.DeleteReq) (err error)
+		LSavePermission(ctx context.Context, req *backendRoute.SavePermissionReq) (err error)
 	}
 )
 

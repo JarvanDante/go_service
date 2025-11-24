@@ -144,6 +144,30 @@ func (s *sRole) LDelete(ctx context.Context, req *backendRoute.DeleteReq) (err e
 	return
 }
 
+//LSavePermission
+/**
+ * @desc：保存角色权限
+ * @param ctx
+ * @param req
+ * @return err
+ * @author : Carson
+ */
+func (s *sRole) LSavePermission(ctx context.Context, req *backendRoute.SavePermissionReq) (err error) {
+
+	err = daosite.SaveRolePermission(ctx, req)
+	if err != nil {
+		return err
+	}
+
+	// 记录日志
+	err = daosite.AddAdminLog(ctx, "保存职务权限")
+	if err != nil {
+		return err
+	}
+
+	return
+}
+
 //-------------------------以下私有方法-------------------------
 
 //buildPermissionTree

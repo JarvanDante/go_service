@@ -25,3 +25,9 @@ type DeleteReq struct {
 	g.Meta `path:"/delete-role" method:"post" summary:"删除职务"`
 	Id     int `json:"id" v:"required#角色ID必填" dc:"角色ID"`
 }
+
+type SavePermissionReq struct {
+	g.Meta      `path:"/save-permission" method:"post" summary:"保存职务权限"`
+	Id          int    `json:"id" v:"required#角色ID必填" dc:"角色ID"`
+	Permissions string `json:"permissions" dc:"权限列表（逗号分隔的权限ID）"`
+}

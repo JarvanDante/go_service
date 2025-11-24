@@ -87,6 +87,7 @@ func AddRole(ctx context.Context, siteId int, req *backendRoute.CreateReq) error
 	_, err = AdminRole.Ctx(ctx).Insert(entity.AdminRole{
 		Name:   req.Name,
 		SiteId: siteId,
+		Status: 1,
 	})
 
 	return err
@@ -141,6 +142,39 @@ func DeleteRole(ctx context.Context, req *backendRoute.DeleteReq) error {
 
 	// 2. 删除（只更新需要的字段）
 	_, err = AdminRole.Ctx(ctx).Where("id", id).Delete()
+
+	return err
+}
+
+//SaveRolePermission
+/**
+ * @desc：保存角色权限
+ * @param ctx
+ * @param req
+ * @return error
+ * @author : Carson
+ */
+func SaveRolePermission(ctx context.Context, req *backendRoute.SavePermissionReq) error {
+	// 转换 ID
+	id := gconv.Int(req.Id)
+
+	// 1. 查询角色是否存在
+	var role *entity.AdminRole
+	err := AdminRole.Ctx(ctx).Where("id", id).Scan(&role)
+	if err != nil {
+		return err
+	}
+	if role == nil {
+		return gerror.New("角色不存在")
+	}
+
+	// 2. 更新权限字段（permissions 字段存储逗号分隔的权限ID）
+	_, err = AdminRole.Ctx(ctx).
+		Where("id", id).
+		Data(g.Map{
+			"permissions": req.Permissions,
+		}).
+		Update()
 
 	return err
 }

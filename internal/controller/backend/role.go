@@ -172,3 +172,34 @@ func (c *RoleController) Delete(ctx context.Context, req *backendRoute.DeleteReq
 
 	return
 }
+
+//SavePermission
+/**
+ * showdoc
+ * @catalog 后台/员工
+ * @title 保存职务权限
+ * @description 保存职务权限
+ * @method post
+ * @url /app/save-permission
+ * @param token 必选 string 员工token
+ * @param id 必选 int 角色ID
+ * @param permissions 必选 string 权限列表（逗号分隔的权限ID）
+ * @return {"code":200,"status":1,"message":"保存成功","data":{}}
+ * @return_param code int 状态码
+ * @return_param status int 成功/失败状态
+ * @return_param message string 提示说明
+ * @return_param data object 主要数据
+ * @remark 备注
+ * @number 1
+ */
+func (c *RoleController) SavePermission(ctx context.Context, req *backendRoute.SavePermissionReq) (res *response.Response, err error) {
+
+	err = backend.ServiceRole().LSavePermission(ctx, req)
+	if err != nil {
+		return nil, err
+	}
+
+	response.JsonOkCtx(ctx, g.Map{}, "保存成功")
+
+	return
+}
