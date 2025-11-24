@@ -141,3 +141,34 @@ func (c *AdminController) CreateAdmin(ctx context.Context, req *backendRoute.Cre
 
 	return
 }
+
+//UpdateAdmin
+/**
+ * showdoc
+ * @catalog 后台/员工
+ * @title 编辑员工
+ * @description 编辑员工
+ * @method post
+ * @url /app/update-admin
+ * @param token 必选 string 员工token
+ * @param id 必选 int 员工ID
+ * @param password 可选 string 员工密码
+ * @param nickname 可选 string 员工昵称
+ * @param role 可选 int 员工角色
+ * @param status 可选 int 员工状态
+ * @return {"code":200,"status":1,"message":"编辑员工成功","data":null}
+ * @return_param code int 状态码
+ * @return_param status int 成功/失败状态
+ * @return_param message string 提示说明
+ * @return_param data array 数组
+ * @remark 备注
+ * @number 1
+ */
+func (c *AdminController) UpdateAdmin(ctx context.Context, req *backendRoute.UpdateAdminReq) (res *response.Response, err error) {
+
+	err = backend.ServiceAdmin().LUpdateAdmin(ctx, req)
+
+	response.JsonOkCtx(ctx, nil, "编辑员工成功")
+
+	return
+}

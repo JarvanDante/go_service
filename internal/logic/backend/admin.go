@@ -196,3 +196,66 @@ func (s *sAdmin) LCreateAdmin(ctx context.Context, req *backendRoute.CreateAdmin
 
 	return nil
 }
+
+func (s *sAdmin) LUpdateAdmin(ctx context.Context, req *backendRoute.UpdateAdminReq) (err error) {
+	site := g.RequestFromCtx(ctx).GetCtxVar("site").Val().(*entity.Site)
+
+	// 查找员工
+	admin, err := daosite.Admin.
+		Ctx(ctx).
+		Where(do.Admin{
+			SiteId: site.Id,
+			Id:     req.Id,
+		}).One()
+
+	if err != nil {
+		return err
+	}
+	if admin.IsEmpty() {
+		return gerror.New("没有找到后台用户")
+	}
+
+	// 构建更新数据
+	updateData := g.Map{}
+
+	if req.Nickname != "" {
+		updateData["nickname"] = req.Nickname
+	}
+
+	if req.Password != "" {
+		bcrypt, err := helpers.Bcrypt(req.Password)
+		if err != nil {
+			return err
+		}
+		updateData["password"] = bcrypt
+	}
+
+	if req.Role > 0 {
+		updateData["admin_role_id"] = req.Role
+	}
+
+	updateData["status"] = req.Status
+	updateData["updated_at"] = gtime.Now()
+
+	// 更新员工信息
+	_, err = daosite.Admin.Ctx(ctx).
+		Where(do.Admin{
+			SiteId: site.Id,
+			Id:     req.Id,
+		}).
+		Data(updateData).
+		Update()
+
+	if err != nil {
+		return err
+	}
+
+	// 日志
+	username := admin["username"].String()
+	err = daosite.AddAdminLog(ctx, "编辑员工："+username)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}

@@ -29,11 +29,11 @@ type CreateAdminReq struct {
 
 type UpdateAdminReq struct {
 	g.Meta   `path:"/update-admin" method:"post" summary:"编辑员工"`
-	Id       int    `json:"id"`
-	Password string `json:"password"`
-	Nickname string `json:"nickname"`
-	Role     int    `json:"role"`
-	Status   int    `json:"status"`
+	Id       int    `json:"id" v:"required#请输入员工ID" dc:"员工ID"`
+	Password string `json:"password" v:"password2#密码必须由字母和数字组成并且长度在6~18" dc:"密码"`
+	Nickname string `json:"nickname" v:"length:2,20#昵称长度2-20" dc:"昵称"`
+	Role     int    `json:"role" dc:"角色"`
+	Status   int    `json:"status" dc:"状态"`
 }
 
 type DeleteAdminReq struct {
