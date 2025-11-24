@@ -172,3 +172,30 @@ func (c *AdminController) UpdateAdmin(ctx context.Context, req *backendRoute.Upd
 
 	return
 }
+
+//DeleteAdmin
+/**
+ * showdoc
+ * @catalog 后台/员工
+ * @title 删除员工
+ * @description 删除员工
+ * @method post
+ * @url /app/delete-admin
+ * @param token 必选 string 员工token
+ * @param id 必选 int 员工ID
+ * @return {"code":200,"status":1,"message":"删除员工成功","data":null}
+ * @return_param code int 状态码
+ * @return_param status int 成功/失败状态
+ * @return_param message string 提示说明
+ * @return_param data array 数组
+ * @remark 备注
+ * @number 1
+ */
+func (c *AdminController) DeleteAdmin(ctx context.Context, req *backendRoute.DeleteAdminReq) (res *response.Response, err error) {
+
+	err = backend.ServiceAdmin().LDeleteAdmin(ctx, req)
+
+	response.JsonOkCtx(ctx, nil, "删除员工成功")
+
+	return
+}

@@ -38,5 +38,5 @@ type UpdateAdminReq struct {
 
 type DeleteAdminReq struct {
 	g.Meta `path:"/delete-admin" method:"post" summary:"删除员工"`
-	Id     int `json:"id"`
+	Id     int `json:"id" v:"required#请输入员工ID" dc:"员工ID"`
 }

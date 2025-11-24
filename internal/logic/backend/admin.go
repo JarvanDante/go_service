@@ -259,3 +259,53 @@ func (s *sAdmin) LUpdateAdmin(ctx context.Context, req *backendRoute.UpdateAdmin
 
 	return nil
 }
+
+func (s *sAdmin) LDeleteAdmin(ctx context.Context, req *backendRoute.DeleteAdminReq) (err error) {
+	site := g.RequestFromCtx(ctx).GetCtxVar("site").Val().(*entity.Site)
+	currentAdmin := g.RequestFromCtx(ctx).GetCtxVar("admin").Val().(*entitysite.Admin)
+
+	// 不能删除自己
+	if req.Id == gconv.Int(currentAdmin.Id) {
+		return gerror.New("不能自己删除自己")
+	}
+
+	// 查找员工
+	admin, err := daosite.Admin.
+		Ctx(ctx).
+		Where(do.Admin{
+			SiteId: site.Id,
+			Id:     req.Id,
+		}).One()
+
+	if err != nil {
+		return err
+	}
+	if admin.IsEmpty() {
+		return gerror.New("没有找到后台用户")
+	}
+
+	// 软删除：设置状态为禁用，设置删除时间
+	_, err = daosite.Admin.Ctx(ctx).
+		Where(do.Admin{
+			SiteId: site.Id,
+			Id:     req.Id,
+		}).
+		Data(g.Map{
+			"status":    0, // STATUS_INACTIVE
+			"delete_at": gtime.Now().Unix(),
+		}).
+		Update()
+
+	if err != nil {
+		return err
+	}
+
+	// 日志
+	username := admin["username"].String()
+	err = daosite.AddAdminLog(ctx, "删除员工："+username)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
