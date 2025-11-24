@@ -4,6 +4,7 @@ import (
 	"context"
 	"github.com/gogf/gf/v2/frame/g"
 	"go-service/api/backendRoute"
+	daobalance "go-service/internal/dao/jh_balance/dao"
 	daosite "go-service/internal/dao/jh_site/dao"
 	entitysite "go-service/internal/dao/jh_site/model/entity"
 	"go-service/internal/dao/jinhuang/model/entity"
@@ -115,16 +116,37 @@ func (s *sUser) LIndex(ctx context.Context, req *backendRoute.UsersReq) (interfa
 		model = model.Where("user.pay_times >= ?", 1)
 	}
 
-	// 获取总数（在添加银行卡筛选之前）
+	// 银行卡号筛选
+	if req.CardNo != nil && *req.CardNo != "" {
+		// 先查询符合银行卡号的用户ID
+		var userBanks []struct {
+			UserId int `json:"user_id"`
+		}
+		err := daosite.UserBank.Ctx(ctx).
+			Where("card_no", *req.CardNo).
+			Fields("user_id").
+			Scan(&userBanks)
+
+		if err != nil || len(userBanks) == 0 {
+			return g.Map{
+				"list":               []interface{}{},
+				"count":              0,
+				"total_users":        0,
+				"total_charge_users": 0,
+			}, nil
+		}
+
+		userIds := make([]interface{}, 0)
+		for _, ub := range userBanks {
+			userIds = append(userIds, ub.UserId)
+		}
+		model = model.WhereIn("id", userIds)
+	}
+
+	// 获取总数
 	count, err := model.Count()
 	if err != nil {
 		return nil, err
-	}
-
-	// 银行卡号筛选（需要 JOIN user_bank 表）
-	if req.CardNo != nil && *req.CardNo != "" {
-		model = model.LeftJoin("user_bank", "user.id = user_bank.user_id")
-		model = model.Where("user_bank.card_no", *req.CardNo)
 	}
 
 	// 分页参数
@@ -139,7 +161,7 @@ func (s *sUser) LIndex(ctx context.Context, req *backendRoute.UsersReq) (interfa
 	}
 
 	// 排序字段
-	orderField := "user.created_at"
+	orderField := "created_at"
 	if req.SortField != nil && *req.SortField != "" {
 		orderField = s.getOrderByField(*req.SortField)
 	}
@@ -150,38 +172,73 @@ func (s *sUser) LIndex(ctx context.Context, req *backendRoute.UsersReq) (interfa
 		orderRule = "ASC"
 	}
 
-	// 查询字段
-	fields := "user.id, user.pay_times, user.username, user.grade_id, user.level_id, user.agent_id, " +
-		"user.status, user.register_ip, user.register_time, user.last_login_ip, user.last_login_time, " +
-		"user.last_login_address, user.realname, user.mobile, user.email, user.focus_level, " +
-		"user.balance_status, user.register_url"
-
-	// 关联 balance_user 表
-	model = model.LeftJoin("jh_balance.balance_user", "user.id = balance_user.user_id")
-	fields += ", balance_user.balance, balance_user.balance_frozen, balance_user.points"
-
-	// 如果没有银行卡筛选，也需要关联 user_bank 表来获取银行卡号
-	if req.CardNo == nil || *req.CardNo == "" {
-		model = model.LeftJoin("user_bank", "user.id = user_bank.user_id")
-	}
-	fields += ", user_bank.card_no"
-
-	// 执行查询
-	var userList []map[string]interface{}
-	err = model.Fields(fields).
-		Page(page, size).
+	// 执行查询 - 只查询 user 表
+	var users []entitysite.User
+	err = model.Page(page, size).
 		Order(orderField + " " + orderRule).
-		Scan(&userList)
+		Scan(&users)
 
 	if err != nil {
 		return nil, err
 	}
 
+	// 如果没有数据，直接返回
+	if len(users) == 0 {
+		return g.Map{
+			"list":               []interface{}{},
+			"count":              count,
+			"total_users":        0,
+			"total_charge_users": 0,
+		}, nil
+	}
+
+	// 收集所有用户ID
+	userIds := make([]interface{}, 0)
+	for _, user := range users {
+		userIds = append(userIds, user.Id)
+	}
+
+	// 批量查询余额信息
+	var balanceUsers []struct {
+		UserId        int     `json:"user_id"`
+		Balance       float64 `json:"balance"`
+		BalanceFrozen float64 `json:"balance_frozen"`
+		Points        int     `json:"points"`
+	}
+	daobalance.BalanceUser.Ctx(ctx).
+		WhereIn("user_id", userIds).
+		Fields("user_id, balance, balance_frozen, points").
+		Scan(&balanceUsers)
+
+	balanceMap := make(map[int]map[string]interface{})
+	for _, bu := range balanceUsers {
+		balanceMap[bu.UserId] = map[string]interface{}{
+			"balance":        bu.Balance,
+			"balance_frozen": bu.BalanceFrozen,
+			"points":         bu.Points,
+		}
+	}
+
+	// 批量查询银行卡信息
+	var userBanks []struct {
+		UserId int    `json:"user_id"`
+		CardNo string `json:"card_no"`
+	}
+	daosite.UserBank.Ctx(ctx).
+		WhereIn("user_id", userIds).
+		Fields("user_id, card_no").
+		Scan(&userBanks)
+
+	bankMap := make(map[int]string)
+	for _, ub := range userBanks {
+		bankMap[ub.UserId] = ub.CardNo
+	}
+
 	// 获取所有代理用户名（批量查询）
-	agentIds := make([]int, 0)
-	for _, user := range userList {
-		if agentId, ok := user["agent_id"].(int); ok && agentId > 0 {
-			agentIds = append(agentIds, agentId)
+	agentIds := make([]interface{}, 0)
+	for _, user := range users {
+		if user.AgentId > 0 {
+			agentIds = append(agentIds, user.AgentId)
 		}
 	}
 
@@ -208,51 +265,74 @@ func (s *sUser) LIndex(ctx context.Context, req *backendRoute.UsersReq) (interfa
 
 	// 组装返回数据
 	data := make([]g.Map, 0)
-	for _, user := range userList {
+	for _, user := range users {
+		// 获取余额信息
+		balance := 0.0
+		balanceFrozen := 0.0
+		points := 0
+		if balanceInfo, ok := balanceMap[int(user.Id)]; ok {
+			balance = balanceInfo["balance"].(float64)
+			balanceFrozen = balanceInfo["balance_frozen"].(float64)
+			points = balanceInfo["points"].(int)
+		}
+
+		// 获取银行卡号
+		cardNo := ""
+		if cn, ok := bankMap[int(user.Id)]; ok {
+			cardNo = cn
+		}
+
 		item := g.Map{
-			"id":                 user["id"],
-			"pay_times":          user["pay_times"],
-			"username":           user["username"],
-			"grade_id":           user["grade_id"],
-			"level_id":           user["level_id"],
-			"agent_id":           user["agent_id"],
-			"status":             user["status"],
-			"register_ip":        user["register_ip"],
-			"register_time":      user["register_time"],
-			"last_login_ip":      user["last_login_ip"],
-			"last_login_time":    user["last_login_time"],
-			"last_login_address": user["last_login_address"],
-			"realname":           user["realname"],
-			"mobile":             user["mobile"],
-			"email":              user["email"],
-			"focus_level":        user["focus_level"],
-			"balance_status":     user["balance_status"],
-			"balance":            user["balance"],
-			"balance_frozen":     user["balance_frozen"],
-			"points":             user["points"],
-			"card_no":            user["card_no"],
-			"register_url":       user["register_url"],
+			"id":                 user.Id,
+			"pay_times":          user.PayTimes,
+			"username":           user.Username,
+			"grade_id":           user.GradeId,
+			"level_id":           user.LevelId,
+			"agent_id":           user.AgentId,
+			"status":             user.Status,
+			"register_ip":        user.RegisterIp,
+			"register_time":      user.RegisterTime,
+			"last_login_ip":      user.LastLoginIp,
+			"last_login_time":    user.LastLoginTime,
+			"last_login_address": user.LastLoginAddress,
+			"realname":           user.Realname,
+			"mobile":             user.Mobile,
+			"email":              user.Email,
+			"focus_level":        user.FocusLevel,
+			"balance_status":     user.BalanceStatus,
+			"balance":            balance,
+			"balance_frozen":     balanceFrozen,
+			"points":             points,
+			"card_no":            cardNo,
+			"register_url":       user.RegisterUrl,
+			"created_at":         user.CreatedAt,
 			"is_online":          0, // TODO: 实现在线状态检测
 		}
 
 		// 添加代理用户名
-		if agentId, ok := user["agent_id"].(int); ok {
-			item["agent_username"] = agentMap[agentId]
+		if user.AgentId > 0 {
+			item["agent_username"] = agentMap[user.AgentId]
+		} else {
+			item["agent_username"] = ""
 		}
 
 		// 添加等级名称
-		if gradeId, ok := user["grade_id"].(int); ok {
-			item["grade_name"] = gradeMap[gradeId]
+		if user.GradeId > 0 {
+			item["grade_name"] = gradeMap[user.GradeId]
+		} else {
+			item["grade_name"] = ""
 		}
 
 		// 添加层级名称
-		if levelId, ok := user["level_id"].(int); ok {
-			item["level_name"] = levelMap[levelId]
+		if user.LevelId > 0 {
+			item["level_name"] = levelMap[user.LevelId]
+		} else {
+			item["level_name"] = ""
 		}
 
 		// 手机号脱敏
-		if mobile, ok := user["mobile"].(string); ok && len(mobile) >= 11 {
-			item["mobile"] = mobile[:3] + "****" + mobile[7:]
+		if len(user.Mobile) >= 11 {
+			item["mobile"] = user.Mobile[:3] + "****" + user.Mobile[7:]
 		}
 
 		data = append(data, item)
@@ -279,19 +359,19 @@ func (s *sUser) LIndex(ctx context.Context, req *backendRoute.UsersReq) (interfa
 func (s *sUser) getOrderByField(sortField string) string {
 	switch sortField {
 	case "register_time":
-		return "user.register_time"
+		return "register_time"
 	case "balance":
-		return "balance_user.balance"
+		return "created_at" // 余额排序暂时用创建时间代替
 	case "balance_frozen":
-		return "balance_user.balance_frozen"
+		return "created_at" // 冻结余额排序暂时用创建时间代替
 	case "last_login_time":
-		return "user.last_login_time"
+		return "last_login_time"
 	case "points":
-		return "balance_user.points"
+		return "created_at" // 积分排序暂时用创建时间代替
 	case "first":
-		return "user.created_at"
+		return "created_at"
 	default:
-		return "user.created_at"
+		return "created_at"
 	}
 }
 
