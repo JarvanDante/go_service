@@ -42,4 +42,5 @@ type User struct {
 	Remark            string      `json:"remark"              orm:"remark"              description:"备注"`                    // 备注
 	CreatedAt         *gtime.Time `json:"created_at"          orm:"created_at"          description:""`                      //
 	UpdatedAt         *gtime.Time `json:"updated_at"          orm:"updated_at"          description:""`                      //
+	PayTimes          int         `json:"pay_times"           orm:"pay_times"           description:"充值次数"`                  // 充值次数
 }

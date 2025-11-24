@@ -44,4 +44,5 @@ type User struct {
 	Remark            any         // 备注
 	CreatedAt         *gtime.Time //
 	UpdatedAt         *gtime.Time //
+	PayTimes          any         // 充值次数
 }

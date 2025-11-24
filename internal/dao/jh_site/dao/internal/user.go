@@ -53,6 +53,7 @@ type UserColumns struct {
 	Remark            string // 备注
 	CreatedAt         string //
 	UpdatedAt         string //
+	PayTimes          string // 充值次数
 }
 
 // userColumns holds the columns for the table user.
@@ -89,6 +90,7 @@ var userColumns = UserColumns{
 	Remark:            "remark",
 	CreatedAt:         "created_at",
 	UpdatedAt:         "updated_at",
+	PayTimes:          "pay_times",
 }
 
 // NewUserDao creates and returns a new DAO object for table data access.
