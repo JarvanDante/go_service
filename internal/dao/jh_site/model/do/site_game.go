@@ -16,6 +16,7 @@ type SiteGame struct {
 	SiteId      any         // 站点ID
 	Type        any         // 游戏类型。1=体育；2=彩票；3=真人；4=电子游戏
 	GameId      any         // 游戏ID
+	Name        any         // 游戏名称
 	Status      any         // 游戏是否打开或者或者关闭。1=打开；0=关闭
 	IsAvailable any         // 游戏是否可用。总开关。1=可用；0=不可用
 	Sort        any         //

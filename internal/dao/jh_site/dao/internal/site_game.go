@@ -25,6 +25,7 @@ type SiteGameColumns struct {
 	SiteId      string // 站点ID
 	Type        string // 游戏类型。1=体育；2=彩票；3=真人；4=电子游戏
 	GameId      string // 游戏ID
+	Name        string // 游戏名称
 	Status      string // 游戏是否打开或者或者关闭。1=打开；0=关闭
 	IsAvailable string // 游戏是否可用。总开关。1=可用；0=不可用
 	Sort        string //
@@ -38,6 +39,7 @@ var siteGameColumns = SiteGameColumns{
 	SiteId:      "site_id",
 	Type:        "type",
 	GameId:      "game_id",
+	Name:        "name",
 	Status:      "status",
 	IsAvailable: "is_available",
 	Sort:        "sort",

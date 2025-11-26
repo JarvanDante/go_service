@@ -50,6 +50,7 @@ var (
 						backend.NewUserController(),
 						backend.NewUserGradeController(),
 						backend.NewUserLevelController(),
+						backend.NewRebateRuleController(),
 					)
 				})
 
