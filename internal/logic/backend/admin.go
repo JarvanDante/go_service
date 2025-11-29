@@ -309,3 +309,65 @@ func (s *sAdmin) LDeleteAdmin(ctx context.Context, req *backendRoute.DeleteAdmin
 
 	return nil
 }
+
+//LMenus
+/**
+ * @desc：获取菜单列表
+ * @param ctx
+ * @param req
+ * @return res
+ * @return err
+ * @author : Carson
+ */
+func (s *sAdmin) LMenus(ctx context.Context, req *backendRoute.MenusReq) (interface{}, error) {
+	//获取当前admin信息
+	admin := g.RequestFromCtx(ctx).GetCtxVar("admin").Val().(*entitysite.Admin)
+
+	// 获取角色
+	role, err := daosite.GetRole(ctx, admin.AdminRoleId)
+	if err != nil {
+		return nil, err
+	}
+	permIds := daosite.GetPermissionIds(role)
+	permList, _ := daosite.GetPermissions(ctx, permIds)
+
+	menuTree := BuildMenuTree(permList, 0)
+
+	return menuTree, nil
+}
+
+//BuildMenuTree
+/**
+ * @desc：构造菜单树（用于菜单接口）
+ * @param list
+ * @param parentId
+ * @return []map[string]interface{}
+ * @author : Carson
+ */
+func BuildMenuTree(list []*entity.AdminPermission, parentId int) []map[string]interface{} {
+	var tree []map[string]interface{}
+
+	for _, item := range list {
+		if item.ParentId == parentId && item.Type == 1 { // 只构建菜单
+			children := BuildMenuTree(list, gconv.Int(item.Id))
+			var childrenPtr interface{} = children
+			if len(children) == 0 {
+				childrenPtr = nil
+			}
+
+			node := map[string]interface{}{
+				"id":           item.Id,
+				"type":         item.Type,
+				"name":         item.Name,
+				"backend_url":  item.BackendUrl,
+				"frontend_url": item.FrontendUrl,
+				"open":         true,
+				"checked":      false,
+				"children":     childrenPtr,
+			}
+			tree = append(tree, node)
+		}
+	}
+
+	return tree
+}

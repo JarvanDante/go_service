@@ -40,3 +40,7 @@ type DeleteAdminReq struct {
 	g.Meta `path:"/delete-admin" method:"post" summary:"删除员工"`
 	Id     int `json:"id" v:"required#请输入员工ID" dc:"员工ID"`
 }
+
+type MenusReq struct {
+	g.Meta `path:"/menus" method:"get" summary:"获取菜单列表"`
+}

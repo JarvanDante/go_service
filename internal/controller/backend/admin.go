@@ -199,3 +199,31 @@ func (c *AdminController) DeleteAdmin(ctx context.Context, req *backendRoute.Del
 
 	return
 }
+
+//Menus
+/**
+ * showdoc
+ * @catalog 后台/系统
+ * @title 获取菜单列表
+ * @description 获取当前登录用户的菜单列表
+ * @method get
+ * @url /app/menus
+ * @param token 必选 string 员工token
+ * @return {"code":200,"status":1,"message":"获取数据成功","data":[{"id":1,"type":1,"name":"系统","backend_url":"","frontend_url":"sysSetting","open":true,"checked":false,"children":[{"id":2,"type":1,"name":"全局设置","backend_url":"basic-setting","frontend_url":"sysSetting/basicSetting","open":true,"checked":false,"children":[{"id":3,"type":1,"name":"基本信息","backend_url":"user-basic-info","frontend_url":"sysSetting/basicSetting/sysBasicSet","open":true,"checked":false,"children":null}]}]}]}
+ * @return_param code int 状态码
+ * @return_param status int 成功/失败状态
+ * @return_param message string 提示说明
+ * @return_param data array 菜单数组
+ * @remark 备注
+ * @number 1
+ */
+func (c *AdminController) Menus(ctx context.Context, req *backendRoute.MenusReq) (res *response.Response, err error) {
+	data, err := backend.ServiceAdmin().LMenus(ctx, req)
+	if err != nil {
+		response.JsonErrCtx(ctx, err.Error())
+		return
+	}
+	response.JsonOkCtx(ctx, data, "获取数据成功")
+
+	return
+}

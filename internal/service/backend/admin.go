@@ -13,6 +13,7 @@ type (
 		LCreateAdmin(ctx context.Context, req *backendRoute.CreateAdminReq) (err error)
 		LUpdateAdmin(ctx context.Context, req *backendRoute.UpdateAdminReq) (err error)
 		LDeleteAdmin(ctx context.Context, req *backendRoute.DeleteAdminReq) (err error)
+		LMenus(ctx context.Context, req *backendRoute.MenusReq) (res interface{}, err error)
 	}
 )
 
